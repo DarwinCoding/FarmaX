@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Órdenes de Despacho — Farmacia Clínica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/ordenes.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+  <script src="/js/auth-guard.js"></script>
+</head>
+<body>
+
+  <header>
+    <img src="/img/logo.svg" alt="Farmacia Clínica" class="header-logo" />
+    <div class="header-texto">
+      <h1>Farmacia Clínica</h1>
+      <p>Órdenes de despacho por área</p>
+    </div>
+  </header>
+
+  <nav class="nav-principal">
+    <div class="nav-enlaces">
+      <a href="/" class="nav-link">💊 Inventario</a>
+      <a href="/ordenes.html" class="nav-link activo">📦 Órdenes</a>
+      <a href="/reportes.html" class="nav-link">📊 Reportes</a>
+      <a href="/orden-especial.html" class="nav-link">⭐ Orden Especial</a>
+      <a href="/usuarios.html" class="nav-link" data-solo-admin>👥 Usuarios</a>
+    </div>
+    <div class="nav-usuario">
+      <span id="nav-username">…</span>
+      <span class="nav-badge-rol" id="nav-rol"></span>
+      <button class="btn-logout" onclick="cerrarSesion()">⏻ Salir</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="card">
+      <div class="tabs">
+        <button class="tab-btn activo" id="tab-lista-btn">📋 Órdenes registradas</button>
+        <button class="tab-btn" id="tab-carrito-btn">🛒 Carrito activo</button>
+      </div>
+
+      <div class="tab-panel activo" id="tab-lista-panel">
+        <div class="form-nueva-orden" style="margin-bottom:1.5rem">
+          <div class="form-grupo">
+            <label for="select-area">Área de destino</label>
+            <select id="select-area">
+              <option value="" disabled selected>Seleccionar área…</option>
+              <option value="Hospitalización">Hospitalización</option>
+              <option value="Quirófano">Quirófano</option>
+              <option value="Emergencias">Emergencias</option>
+              <option value="Consulta Externa">Consulta Externa</option>
+            </select>
+          </div>
+          <button id="btn-crear-orden" class="btn btn-primario">➕ Crear nueva orden</button>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--gris-borde);margin-bottom:1.2rem"/>
+        <div id="lista-ordenes"><p style="color:var(--gris-texto)">Cargando órdenes…</p></div>
+      </div>
+
+      <div class="tab-panel" id="tab-carrito-panel">
+        <div id="carrito-vacio-msg" style="text-align:center;padding:3rem 1rem;color:var(--gris-texto)">
+          <p style="font-size:2rem;margin-bottom:0.5rem">🛒</p>
+          <p>No hay ninguna orden abierta.</p>
+          <p style="margin-top:0.5rem">Ve a <strong>Órdenes registradas</strong>, crea una nueva o haz clic en <em>Abrir carrito</em>.</p>
+        </div>
+        <div id="carrito-contenido" style="display:none">
+          <div class="orden-activa-header">
+            <div class="orden-activa-info">
+              <h3 id="orden-activa-titulo">Orden #—</h3>
+              <p id="orden-activa-fecha"></p>
+            </div>
+          </div>
+          <div id="form-agregar-med">
+            <div class="agregar-medicamento-fila">
+              <div class="form-grupo">
+                <label for="buscador-medicamento">Buscar medicamento</label>
+                <div class="buscador-med-wrapper">
+                  <input type="text" id="buscador-medicamento" placeholder="Escribe el nombre…" autocomplete="off" />
+                  <div id="autocomplete-lista"></div>
+                </div>
+              </div>
+              <div class="form-grupo">
+                <label for="cantidad-solicitar">Cantidad</label>
+                <input type="number" id="cantidad-solicitar" value="1" min="1" placeholder="1" />
+              </div>
+              <button id="btn-agregar-med" class="btn btn-primario">➕ Agregar</button>
+            </div>
+          </div>
+          <div class="tabla-contenedor">
+            <table class="tabla-carrito">
+              <thead>
+                <tr>
+                  <th>Medicamento</th>
+                  <th style="text-align:center">Solicitado</th>
+                  <th style="text-align:center">A entregar</th>
+                  <th style="text-align:center">Stock disp.</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="carrito-body"></tbody>
+            </table>
+          </div>
+          <div class="carrito-footer">
+            <div class="carrito-totales">
+              Total solicitado: <strong id="total-solicitado">0</strong> unidades<br>
+              Total a entregar: <strong id="total-entregado">0</strong> unidades
+            </div>
+            <button id="btn-despachar" class="btn-despachar">📦 Despachar Orden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Farmacia Clínica v3.0 — Módulo de Órdenes de Despacho</footer>
+  <div id="toast-contenedor"></div>
+  <script src="/js/ordenes.js"></script>
+</body>
+</html>

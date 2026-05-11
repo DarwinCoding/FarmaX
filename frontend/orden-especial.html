@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orden Especial — Farmacia Clínica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <script src="/js/auth-guard.js"></script>
+</head>
+<body>
+
+  <header>
+    <img src="/img/logo.svg" alt="Farmacia Clínica" class="header-logo"/>
+    <div class="header-texto">
+      <h1>Farmacia Clínica</h1>
+      <p>Módulo de órdenes especiales</p>
+    </div>
+  </header>
+
+  <!-- ── NAVBAR — mismo estilo que el resto del sistema ── -->
+  <nav class="nav-principal">
+    <div class="nav-enlaces">
+      <a href="/" class="nav-link">💊 Inventario</a>
+      <a href="/ordenes.html" class="nav-link">📦 Órdenes</a>
+      <a href="/reportes.html" class="nav-link">📊 Reportes</a>
+      <a href="/orden-especial.html" class="nav-link activo">⭐ Orden Especial</a>
+      <a href="/usuarios.html" class="nav-link" data-solo-admin>👥 Usuarios</a>
+    </div>
+    <div class="nav-usuario">
+      <span id="nav-username">…</span>
+      <span class="nav-badge-rol" id="nav-rol"></span>
+      <button class="btn-logout" onclick="cerrarSesion()">⏻ Salir</button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ── FORMULARIO ── -->
+    <div class="card">
+      <h2 class="card-titulo">⭐ Registrar Orden Especial</h2>
+      <p style="color:var(--gris-texto);margin-bottom:1.5rem;font-size:.9rem">
+        Registra entregas de medicamentos a médicos o personal. El stock se descuenta automáticamente.
+      </p>
+
+      <div class="form-grid">
+
+        <!-- Nombre de la persona -->
+        <div class="form-grupo">
+          <label for="oe-nombre">Nombre del médico / personal <span style="color:var(--rojo)">*</span></label>
+          <input type="text" id="oe-nombre" placeholder="Ej: Dr. García López" autocomplete="off"/>
+        </div>
+
+        <!-- Tipo de persona -->
+        <div class="form-grupo">
+          <label for="oe-tipo">Tipo de persona <span style="color:var(--rojo)">*</span></label>
+          <select id="oe-tipo">
+            <option value="">— Seleccionar —</option>
+            <option value="médico">Médico</option>
+            <option value="personal">Personal</option>
+          </select>
+        </div>
+
+        <!-- Buscador de medicamento con autocompletado -->
+        <div class="form-grupo" style="position:relative">
+          <label for="oe-med-busqueda">Medicamento <span style="color:var(--rojo)">*</span></label>
+          <input
+            type="text"
+            id="oe-med-busqueda"
+            placeholder="Escriba para buscar…"
+            autocomplete="off"
+            oninput="buscarMedicamento(this.value)"
+            onfocus="buscarMedicamento(this.value)"
+          />
+          <!-- Lista de sugerencias de autocompletado -->
+          <div id="oe-autocomplete" style="
+            display:none;
+            position:absolute;
+            top:100%;
+            left:0;
+            right:0;
+            background:white;
+            border:1px solid var(--gris-borde);
+            border-top:none;
+            border-radius:0 0 8px 8px;
+            max-height:200px;
+            overflow-y:auto;
+            z-index:100;
+            box-shadow:0 4px 12px rgba(0,0,0,.1);
+          "></div>
+          <!-- Campo oculto que guarda el ID del medicamento seleccionado -->
+          <input type="hidden" id="oe-medicamento-id"/>
+          <small id="oe-stock-info" style="color:var(--gris-texto);font-size:.8rem"></small>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="form-grupo">
+          <label for="oe-cantidad">Cantidad <span style="color:var(--rojo)">*</span></label>
+          <input type="number" id="oe-cantidad" min="1" placeholder="Ej: 5"/>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-grupo">
+          <label for="oe-fecha">Fecha <span style="color:var(--rojo)">*</span></label>
+          <input type="date" id="oe-fecha"/>
+        </div>
+
+        <!-- Observación -->
+        <div class="form-grupo" style="grid-column: 1 / -1">
+          <label for="oe-observacion">Observación <span style="color:var(--gris-texto);font-weight:400">(opcional)</span></label>
+          <input type="text" id="oe-observacion" placeholder="Ej: para uso en sala 3"/>
+        </div>
+
+      </div>
+
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <button class="btn btn-primario" onclick="registrarOrden()">⭐ Registrar orden especial</button>
+        <button class="btn btn-secundario" onclick="limpiarFormulario()">✕ Limpiar</button>
+      </div>
+    </div>
+
+    <!-- ── HISTORIAL ── -->
+    <div class="card" style="margin-top:1.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem">
+        <h2 class="card-titulo" style="margin:0">📋 Historial de órdenes especiales</h2>
+        <button class="btn btn-secundario" onclick="cargarHistorial()">🔄 Actualizar</button>
+      </div>
+
+      <div id="tabla-ordenes-especiales">
+        <p style="color:var(--gris-texto)">Cargando…</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>Farmacia Clínica v3.0 — Módulo de Órdenes Especiales</footer>
+  <div id="toast-contenedor"></div>
+  <script src="/js/orden-especial.js"></script>
+</body>
+</html>

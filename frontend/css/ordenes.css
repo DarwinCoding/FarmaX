@@ -1,0 +1,357 @@
+/* ============================================================
+   ordenes.css — Estilos NUEVOS para Órdenes de Despacho
+   ============================================================
+   Este archivo SOLO contiene estilos nuevos.
+   No modifica nada de style.css.
+   Se carga únicamente en ordenes.html.
+   ============================================================ */
+
+/* ══════════════════════════════════════
+   NAVEGACIÓN POR PESTAÑAS (tabs)
+   Permite cambiar entre "Lista de Órdenes"
+   y "Nueva Orden / Carrito activo"
+══════════════════════════════════════ */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--gris-borde);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: none;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.18s;
+}
+
+.tab-btn:hover {
+  color: var(--verde-medio);
+}
+
+.tab-btn.activo {
+  color: var(--verde-oscuro);
+  border-bottom-color: var(--verde-medio);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.activo {
+  display: block;
+}
+
+/* ══════════════════════════════════════
+   FORMULARIO DE NUEVA ORDEN
+══════════════════════════════════════ */
+.form-nueva-orden {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.form-nueva-orden .form-grupo {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ══════════════════════════════════════
+   CARRITO ACTIVO — Caja de búsqueda
+   y agregar medicamento
+══════════════════════════════════════ */
+.orden-activa-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--verde-suave);
+}
+
+.orden-activa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.orden-activa-info h3 {
+  font-family: var(--fuente-titulo);
+  font-size: 1.15rem;
+  color: var(--verde-oscuro);
+}
+
+.orden-activa-info p {
+  font-size: 0.82rem;
+  color: var(--gris-texto);
+}
+
+/* Buscador de medicamentos con autocompletado */
+.buscador-med-wrapper {
+  position: relative;
+}
+
+.buscador-med-wrapper input {
+  width: 100%;
+}
+
+/* Lista de sugerencias del autocompletado */
+#autocomplete-lista {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--blanco);
+  border: 1.5px solid var(--verde-claro);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  z-index: 200;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: var(--sombra-media);
+  display: none; /* Oculto hasta que el usuario escribe */
+}
+
+#autocomplete-lista.visible {
+  display: block;
+}
+
+.autocomplete-item {
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--gris-borde);
+  transition: background 0.12s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover {
+  background: var(--verde-suave);
+}
+
+.autocomplete-item .stock-info {
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+}
+
+.autocomplete-item .stock-bajo {
+  color: var(--rojo);
+  font-weight: 700;
+}
+
+/* Fila para buscar + cantidad + botón agregar */
+.agregar-medicamento-fila {
+  display: grid;
+  grid-template-columns: 1fr 120px auto;
+  gap: 0.8rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 580px) {
+  .agregar-medicamento-fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ══════════════════════════════════════
+   TABLA DEL CARRITO (detalle de orden)
+══════════════════════════════════════ */
+.tabla-carrito {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tabla-carrito thead {
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+}
+
+.tabla-carrito thead th {
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tabla-carrito tbody tr {
+  border-bottom: 1px solid var(--gris-borde);
+  transition: background 0.15s;
+}
+
+.tabla-carrito tbody tr:hover {
+  background: var(--verde-suave);
+}
+
+.tabla-carrito tbody td {
+  padding: 0.7rem 0.9rem;
+  vertical-align: middle;
+}
+
+/* Input de cantidad entregada dentro de la tabla */
+.input-entregada {
+  width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 6px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.9rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.input-entregada:focus {
+  outline: none;
+  border-color: var(--verde-claro);
+}
+
+/* Si el valor entregado supera el stock: borde rojo */
+.input-entregada.error {
+  border-color: var(--rojo);
+  background: var(--rojo-suave);
+}
+
+/* Carrito vacío */
+.carrito-vacio {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--gris-texto);
+  font-style: italic;
+}
+
+/* Pie del carrito: totales y botón despachar */
+.carrito-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--gris-borde);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.carrito-totales {
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+  line-height: 1.7;
+}
+
+.carrito-totales strong {
+  color: var(--negro-suave);
+}
+
+/* Botón "Despachar" — prominente, verde oscuro */
+.btn-despachar {
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+  font-size: 1rem;
+  padding: 0.75rem 1.8rem;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--fuente-cuerpo);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-despachar:hover {
+  background: var(--verde-claro);
+  box-shadow: 0 4px 16px rgba(10, 74, 58, 0.3);
+}
+
+.btn-despachar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════
+   LISTA DE ÓRDENES ANTERIORES
+══════════════════════════════════════ */
+.orden-card {
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  transition: box-shadow 0.15s;
+  background: var(--blanco);
+}
+
+.orden-card:hover {
+  box-shadow: var(--sombra-suave);
+}
+
+.orden-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.orden-card-titulo {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--negro-suave);
+}
+
+.orden-card-sub {
+  font-size: 0.8rem;
+  color: var(--gris-texto);
+}
+
+/* Estado: badge de pendiente / completada */
+.estado-badge {
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.estado-pendiente {
+  background: var(--amarillo-suave);
+  color: var(--amarillo);
+  border: 1.5px solid var(--amarillo-borde);
+}
+
+.estado-completada {
+  background: #e0f4ed;
+  color: var(--verde-oscuro);
+  border: 1.5px solid var(--verde-claro);
+}
+
+/* Sin órdenes aún */
+.sin-ordenes {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gris-texto);
+  font-style: italic;
+}

@@ -1,0 +1,212 @@
+/* ============================================================
+   auth.css — Estilos para navbar con usuario y logout (Fase 3)
+   Se carga en todas las páginas protegidas.
+   NO modifica style.css ni ordenes.css.
+   ============================================================ */
+
+/* ── Navbar superior con usuario logueado ── */
+.nav-principal {
+  background: var(--verde-suave);
+  border-bottom: 1px solid var(--gris-borde);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 42px;
+}
+
+.nav-enlaces {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nav-link {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--verde-oscuro);
+  text-decoration: none;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: rgba(10, 74, 58, 0.08);
+}
+
+.nav-link.activo {
+  color: var(--verde-claro);
+  background: rgba(26, 144, 112, 0.12);
+}
+
+/* El enlace de usuarios solo se ve para admins (data-solo-admin lo oculta) */
+
+.nav-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.83rem;
+  color: var(--gris-texto);
+}
+
+.nav-badge-rol {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--verde-oscuro);
+}
+
+.btn-logout {
+  padding: 0.3rem 0.75rem;
+  background: none;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 6px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.8rem;
+  color: var(--gris-texto);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-logout:hover {
+  background: var(--rojo-suave);
+  border-color: var(--rojo-borde);
+  color: var(--rojo);
+}
+
+/* ── Header con logo ── */
+.header-logo {
+  height: 36px;
+  width: auto;
+}
+
+/* ── Reportes: badges de estado en tablas ── */
+.badge-caducado    { background: var(--rojo);     color: white; }
+.badge-por-caducar { background: var(--amarillo);  color: white; }
+.badge-sin-stock   { background: #6b7280;          color: white; }
+.badge-stock-bajo  { background: var(--rojo);      color: white; }
+.badge-normal      { background: #e0f4ed; color: var(--verde-oscuro); }
+.badge-vigente     { background: #e0f4ed; color: var(--verde-oscuro); }
+
+/* ── Tarjetas de resumen (reportes) ── */
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resumen-card {
+  background: var(--blanco);
+  border: 1px solid var(--gris-borde);
+  border-radius: 12px;
+  padding: 1.1rem 1rem;
+  text-align: center;
+  box-shadow: var(--sombra-suave);
+}
+
+.resumen-card .numero {
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  color: var(--verde-oscuro);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.resumen-card .numero.rojo    { color: var(--rojo); }
+.resumen-card .numero.amarillo { color: var(--amarillo); }
+
+.resumen-card .etiqueta {
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Sección de reportes con tabs ── */
+.reporte-tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--gris-borde);
+  padding-bottom: 0;
+}
+
+.reporte-tab-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.reporte-tab-btn:hover  { color: var(--verde-medio); }
+.reporte-tab-btn.activo { color: var(--verde-oscuro); border-bottom-color: var(--verde-medio); }
+
+.reporte-panel { display: none; }
+.reporte-panel.activo { display: block; }
+
+/* ── Filtro de fechas ── */
+.filtro-fechas {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--gris-claro);
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+}
+
+.filtro-fechas .form-grupo {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* ── Tabla de usuarios ── */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.tabla-usuarios thead {
+  background: var(--verde-oscuro);
+  color: white;
+}
+.tabla-usuarios thead th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.tabla-usuarios tbody tr {
+  border-bottom: 1px solid var(--gris-borde);
+  transition: background 0.15s;
+}
+.tabla-usuarios tbody tr:hover { background: var(--verde-suave); }
+.tabla-usuarios tbody td { padding: 0.75rem 1rem; vertical-align: middle; }
+
+.badge-admin  { background: #ede9fe; color: #6d28d9; font-weight: 700; }
+.badge-usuario { background: #e0f4ed; color: var(--verde-oscuro); font-weight: 700; }
+
+/* ── Modal de nuevo usuario ── */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  text-align: left;
+  margin: 1rem 0;
+}

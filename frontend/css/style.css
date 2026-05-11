@@ -1,0 +1,557 @@
+/* ============================================================
+   style.css — Estilos de la Farmacia Clínica
+   ============================================================
+   Usamos variables CSS para colores principales.
+   Así si quieres cambiar el color de la app, solo
+   cambias el valor de la variable y afecta a todo.
+   ============================================================ */
+
+/* ── Variables globales de color y tipografía ── */
+:root {
+  --verde-oscuro:  #0a4a3a;
+  --verde-medio:   #0f6b54;
+  --verde-claro:   #1a9070;
+  --verde-suave:   #e8f5f1;
+  --blanco:        #ffffff;
+  --gris-claro:    #f4f6f5;
+  --gris-borde:    #d1ddd9;
+  --gris-texto:    #4a5e58;
+  --negro-suave:   #1a2620;
+
+  /* Alertas */
+  --rojo:          #c0392b;
+  --rojo-suave:    #fdecea;
+  --rojo-borde:    #e74c3c;
+  --amarillo:      #d4820a;
+  --amarillo-suave:#fff8e6;
+  --amarillo-borde:#f0a500;
+
+  /* Tipografía */
+  --fuente-titulo: 'DM Serif Display', Georgia, serif;
+  --fuente-cuerpo: 'DM Sans', 'Segoe UI', sans-serif;
+
+  /* Sombras */
+  --sombra-suave: 0 2px 12px rgba(10, 74, 58, 0.08);
+  --sombra-media: 0 4px 24px rgba(10, 74, 58, 0.14);
+}
+
+/* ── Reset básico ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente-cuerpo);
+  background-color: var(--gris-claro);
+  color: var(--negro-suave);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   ENCABEZADO / HEADER
+══════════════════════════════════════ */
+header {
+  background: linear-gradient(135deg, var(--verde-oscuro) 0%, var(--verde-medio) 100%);
+  color: var(--blanco);
+  padding: 1.2rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--sombra-media);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-icono {
+  font-size: 2rem;
+}
+
+.header-texto h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+}
+
+.header-texto p {
+  font-size: 0.82rem;
+  opacity: 0.75;
+  margin-top: -2px;
+}
+
+/* ══════════════════════════════════════
+   CONTENEDOR PRINCIPAL
+══════════════════════════════════════ */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ══════════════════════════════════════
+   BANNER DE ALERTAS (arriba de todo)
+══════════════════════════════════════ */
+#banner-alertas {
+  display: none; /* Se muestra solo cuando hay alertas */
+}
+
+#banner-alertas.visible {
+  display: block;
+}
+
+.alerta-seccion {
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  border-left: 5px solid;
+}
+
+.alerta-seccion.rojo {
+  background: var(--rojo-suave);
+  border-color: var(--rojo-borde);
+}
+
+.alerta-seccion.amarillo {
+  background: var(--amarillo-suave);
+  border-color: var(--amarillo-borde);
+}
+
+.alerta-titulo {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.alerta-titulo.rojo   { color: var(--rojo); }
+.alerta-titulo.amarillo { color: var(--amarillo); }
+
+.alerta-lista {
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+}
+
+.alerta-lista li {
+  padding: 0.15rem 0;
+}
+
+.alerta-lista li::before {
+  content: "→ ";
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════
+   TARJETAS / CARDS
+══════════════════════════════════════ */
+.card {
+  background: var(--blanco);
+  border-radius: 14px;
+  padding: 1.8rem;
+  box-shadow: var(--sombra-suave);
+  border: 1px solid var(--gris-borde);
+}
+
+.card-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.25rem;
+  color: var(--verde-oscuro);
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--verde-suave);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ══════════════════════════════════════
+   FORMULARIO
+══════════════════════════════════════ */
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-grupo label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--verde-oscuro);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-grupo input,
+.form-grupo select {
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 8px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.95rem;
+  color: var(--negro-suave);
+  background: var(--gris-claro);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus {
+  border-color: var(--verde-claro);
+  box-shadow: 0 0 0 3px rgba(26, 144, 112, 0.15);
+  background: var(--blanco);
+}
+
+/* Fila de botones del formulario */
+.form-botones {
+  grid-column: 1 / -1; /* Ocupa todo el ancho */
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════
+   BOTONES
+══════════════════════════════════════ */
+.btn {
+  padding: 0.6rem 1.3rem;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Verde principal */
+.btn-primario {
+  background: var(--verde-medio);
+  color: var(--blanco);
+}
+.btn-primario:hover {
+  background: var(--verde-oscuro);
+  box-shadow: 0 4px 12px rgba(10, 74, 58, 0.3);
+}
+
+/* Secundario / cancelar */
+.btn-secundario {
+  background: var(--gris-claro);
+  color: var(--gris-texto);
+  border: 1.5px solid var(--gris-borde);
+}
+.btn-secundario:hover {
+  background: var(--gris-borde);
+}
+
+/* Editar */
+.btn-editar {
+  background: #e8f0fd;
+  color: #2563eb;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+}
+.btn-editar:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* Eliminar */
+.btn-eliminar {
+  background: var(--rojo-suave);
+  color: var(--rojo);
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+}
+.btn-eliminar:hover {
+  background: var(--rojo);
+  color: white;
+}
+
+/* ══════════════════════════════════════
+   BARRA DE BÚSQUEDA Y CONTADOR
+══════════════════════════════════════ */
+.tabla-controles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#buscador {
+  padding: 0.5rem 0.9rem;
+  border: 1.5px solid var(--gris-borde);
+  border-radius: 8px;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.9rem;
+  width: 260px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--gris-claro);
+}
+
+#buscador:focus {
+  border-color: var(--verde-claro);
+}
+
+#contador-resultados {
+  font-size: 0.83rem;
+  color: var(--gris-texto);
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   TABLA DE MEDICAMENTOS
+══════════════════════════════════════ */
+.tabla-contenedor {
+  overflow-x: auto; /* Scroll horizontal en pantallas pequeñas */
+  border-radius: 10px;
+  border: 1px solid var(--gris-borde);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead {
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+}
+
+thead th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--gris-borde);
+  transition: background 0.15s;
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: var(--verde-suave);
+}
+
+tbody td {
+  padding: 0.8rem 1rem;
+  vertical-align: middle;
+}
+
+/* ── Filas coloreadas según alerta ── */
+
+/* Stock bajo: fondo rojo */
+tbody tr.alerta-stock {
+  background: var(--rojo-suave);
+}
+tbody tr.alerta-stock:hover {
+  background: #fad7d3;
+}
+
+/* Por caducar: fondo amarillo */
+tbody tr.alerta-caducidad {
+  background: var(--amarillo-suave);
+}
+tbody tr.alerta-caducidad:hover {
+  background: #faedc4;
+}
+
+/* Ambas alertas: rojo tiene prioridad */
+tbody tr.alerta-stock.alerta-caducidad {
+  background: var(--rojo-suave);
+}
+
+/* Badges de estado */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-stock-bajo {
+  background: var(--rojo);
+  color: white;
+}
+
+.badge-por-caducar {
+  background: var(--amarillo);
+  color: white;
+}
+
+.badge-ok {
+  background: #e0f4ed;
+  color: var(--verde-oscuro);
+}
+
+/* Columna de acciones */
+td.acciones {
+  white-space: nowrap;
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* ── Mensaje cuando no hay datos ── */
+.sin-datos {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gris-texto);
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════
+   NOTIFICACIONES TOAST (esquina)
+══════════════════════════════════════ */
+#toast-contenedor {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  z-index: 9999;
+}
+
+.toast {
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+  padding: 0.75rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  box-shadow: var(--sombra-media);
+  animation: entrarToast 0.3s ease;
+  max-width: 320px;
+}
+
+.toast.error {
+  background: var(--rojo);
+}
+
+@keyframes entrarToast {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════
+   MODAL DE CONFIRMACIÓN
+══════════════════════════════════════ */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+#modal-overlay.visible {
+  display: flex;
+}
+
+.modal {
+  background: var(--blanco);
+  border-radius: 14px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--sombra-media);
+  text-align: center;
+}
+
+.modal-icono {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.modal h3 {
+  font-family: var(--fuente-titulo);
+  color: var(--negro-suave);
+  margin-bottom: 0.5rem;
+}
+
+.modal p {
+  color: var(--gris-texto);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-botones {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--gris-texto);
+  border-top: 1px solid var(--gris-borde);
+  margin-top: 1rem;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — pantallas pequeñas
+══════════════════════════════════════ */
+@media (max-width: 640px) {
+  header {
+    padding: 1rem;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  #buscador {
+    width: 100%;
+  }
+
+  .tabla-controles {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
