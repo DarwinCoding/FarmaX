@@ -108,11 +108,10 @@ db.exec(`
 // La contraseña "admin123" ya está encriptada
 // con bcrypt (generada con bcryptjs.hashSync).
 // ──────────────────────────────────────────────
-const adminExiste = db.prepare("SELECT id FROM usuarios WHERE username = 'admin'").get();
-if (!adminExiste) {
-  // Hash de "admin123" generado con bcrypt (saltRounds=10)
-  const hashAdmin = "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi";
-  db.prepare("INSERT INTO usuarios (username, password, rol) VALUES (?, ?, 'admin')")
-    .run("admin", hashAdmin);
-  console.log("✅ Usuario admin creado (contraseña: admin123)");
-}
+const hash = bcrypt.hashSync("admin123", 10);
+
+db.prepare(`
+  UPDATE usuarios 
+  SET password = ?
+  WHERE usuario = ?
+`).run(hash, "admin");
