@@ -8,6 +8,7 @@
 // ============================================================
 
 const Database = require("better-sqlite3");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 
 // La base de datos se guarda en la carpeta "backend/data/"
