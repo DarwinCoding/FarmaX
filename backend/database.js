@@ -111,8 +111,21 @@ db.exec(`
 // ──────────────────────────────────────────────
 const hash = bcrypt.hashSync("admin123", 10);
 
-db.prepare(`
-  UPDATE usuarios 
-  SET password = ?
-  WHERE username = ?
-`).run(hash, "admin");
+const adminExistente = db
+  .prepare("SELECT * FROM usuarios WHERE username = ?")
+  .get("admin");
+
+if (adminExistente) {
+  db.prepare(`
+    UPDATE usuarios 
+    SET password = ?, rol = ?
+    WHERE username = ?
+  `).run(hash, "admin", "admin");
+} else {
+  db.prepare(`
+    INSERT INTO usuarios (username, password, rol)
+    VALUES (?, ?, ?)
+  `).run("admin", hash, "admin");
+}
+
+console.log("✅ Usuario admin listo: admin / admin123");
