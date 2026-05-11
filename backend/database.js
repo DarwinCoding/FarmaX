@@ -114,5 +114,5 @@ const hash = bcrypt.hashSync("admin123", 10);
 db.prepare(`
   UPDATE usuarios 
   SET password = ?
-  WHERE usuario = ?
+  WHERE username = ?
 `).run(hash, "admin");
