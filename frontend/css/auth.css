@@ -1,96 +1,111 @@
 /* ============================================================
-   auth.css — Estilos para navbar con usuario y logout (Fase 3)
-   Se carga en todas las páginas protegidas.
-   NO modifica style.css ni ordenes.css.
+   auth.css — Navbar, roles, reportes, usuarios
+   ============================================================
+   Se carga en todas las páginas protegidas (después de style.css).
+   Contiene: navbar, badges de rol, tarjetas de reporte,
+   tabs, filtros de fecha, tabla de usuarios, modal de usuario.
    ============================================================ */
 
-/* ── Navbar superior con usuario logueado ── */
+/* ══════════════════════════════════════
+   NAVBAR UNIFICADO
+   Mismo en todas las páginas protegidas.
+   Fila superior: enlaces de navegación.
+   Fila derecha: usuario + logout.
+══════════════════════════════════════ */
 .nav-principal {
-  background: var(--verde-suave);
-  border-bottom: 1px solid var(--gris-borde);
+  background: var(--azul-suave, #EAF8FF);
+  border-bottom: 1px solid var(--gris-borde, #E3EEF6);
   padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 42px;
+  min-height: 44px;
 }
 
+/* Grupo de enlaces de navegación */
 .nav-enlaces {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 
+/* Cada enlace del menú */
 .nav-link {
   font-size: 0.86rem;
   font-weight: 600;
-  color: var(--verde-oscuro);
+  color: var(--negro-suave, #1F2937);
   text-decoration: none;
-  padding: 0.45rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
-
 .nav-link:hover {
-  background: rgba(10, 74, 58, 0.08);
+  background: rgba(47, 128, 237, 0.08);
+  color: var(--azul-oscuro, #2F80ED);
 }
 
+/* Enlace activo — página actual */
 .nav-link.activo {
-  color: var(--verde-claro);
-  background: rgba(26, 144, 112, 0.12);
+  background: rgba(79, 195, 247, 0.15);
+  color: var(--azul-oscuro, #2F80ED);
 }
 
-/* El enlace de usuarios solo se ve para admins (data-solo-admin lo oculta) */
-
+/* Zona de usuario y logout */
 .nav-usuario {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   font-size: 0.83rem;
-  color: var(--gris-texto);
+  color: var(--gris-texto, #6B7280);
 }
 
 .nav-badge-rol {
   font-weight: 700;
   font-size: 0.75rem;
-  color: var(--verde-oscuro);
+  color: var(--azul-oscuro, #2F80ED);
 }
 
+/* Botón Salir */
 .btn-logout {
   padding: 0.3rem 0.75rem;
   background: none;
-  border: 1.5px solid var(--gris-borde);
-  border-radius: 6px;
-  font-family: var(--fuente-cuerpo);
+  border: 1.5px solid var(--gris-borde, #E3EEF6);
+  border-radius: 8px;
+  font-family: var(--fuente-cuerpo, 'DM Sans', sans-serif);
   font-size: 0.8rem;
-  color: var(--gris-texto);
+  color: var(--gris-texto, #6B7280);
   cursor: pointer;
   transition: all 0.15s;
 }
-
 .btn-logout:hover {
-  background: var(--rojo-suave);
-  border-color: var(--rojo-borde);
-  color: var(--rojo);
+  background: var(--rojo-suave, #FDECEC);
+  border-color: var(--rojo-borde, #F5B7B1);
+  color: var(--rojo, #E74C3C);
 }
 
-/* ── Header con logo ── */
+/* ══════════════════════════════════════
+   HEADER con logo — clase usada en auth.css
+══════════════════════════════════════ */
 .header-logo {
-  height: 36px;
-  width: auto;
+  height: auto;
+  width: 180px;
 }
 
-/* ── Reportes: badges de estado en tablas ── */
-.badge-caducado    { background: var(--rojo);     color: white; }
-.badge-por-caducar { background: var(--amarillo);  color: white; }
-.badge-sin-stock   { background: #6b7280;          color: white; }
-.badge-stock-bajo  { background: var(--rojo);      color: white; }
-.badge-normal      { background: #e0f4ed; color: var(--verde-oscuro); }
-.badge-vigente     { background: #e0f4ed; color: var(--verde-oscuro); }
+/* ══════════════════════════════════════
+   BADGES DE ESTADO (reportes y tablas)
+══════════════════════════════════════ */
+.badge-caducado    { background: var(--rojo, #E74C3C);       color: white; }
+.badge-por-caducar { background: var(--amarillo, #F2B84B);   color: white; }
+.badge-sin-stock   { background: #6b7280;                    color: white; }
+.badge-stock-bajo  { background: var(--rojo, #E74C3C);       color: white; }
+.badge-normal      { background: var(--azul-suave, #EAF8FF); color: var(--azul-oscuro, #2F80ED); }
+.badge-vigente     { background: var(--azul-suave, #EAF8FF); color: var(--azul-oscuro, #2F80ED); }
 
-/* ── Tarjetas de resumen (reportes) ── */
+/* ══════════════════════════════════════
+   TARJETAS DE RESUMEN (panel de reportes)
+══════════════════════════════════════ */
 .resumen-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -99,90 +114,98 @@
 }
 
 .resumen-card {
-  background: var(--blanco);
-  border: 1px solid var(--gris-borde);
-  border-radius: 12px;
+  background: var(--blanco, #fff);
+  border: 1px solid var(--gris-borde, #E3EEF6);
+  border-radius: 14px;
   padding: 1.1rem 1rem;
   text-align: center;
   box-shadow: var(--sombra-suave);
 }
 
 .resumen-card .numero {
-  font-family: var(--fuente-titulo);
+  font-family: var(--fuente-titulo, 'DM Serif Display', serif);
   font-size: 2rem;
-  color: var(--verde-oscuro);
+  color: var(--azul-oscuro, #2F80ED);
   line-height: 1;
   margin-bottom: 0.3rem;
 }
-
-.resumen-card .numero.rojo    { color: var(--rojo); }
-.resumen-card .numero.amarillo { color: var(--amarillo); }
+.resumen-card .numero.rojo    { color: var(--rojo, #E74C3C); }
+.resumen-card .numero.amarillo { color: var(--amarillo, #F2B84B); }
 
 .resumen-card .etiqueta {
   font-size: 0.78rem;
-  color: var(--gris-texto);
+  color: var(--gris-texto, #6B7280);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-/* ── Sección de reportes con tabs ── */
+/* ══════════════════════════════════════
+   TABS DE REPORTES
+══════════════════════════════════════ */
 .reporte-tabs {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--gris-borde);
+  border-bottom: 2px solid var(--gris-borde, #E3EEF6);
   padding-bottom: 0;
 }
 
 .reporte-tab-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.9rem;
   border: none;
   background: none;
-  font-family: var(--fuente-cuerpo);
-  font-size: 0.86rem;
+  font-family: var(--fuente-cuerpo, 'DM Sans', sans-serif);
+  font-size: 0.84rem;
   font-weight: 600;
-  color: var(--gris-texto);
+  color: var(--gris-texto, #6B7280);
   cursor: pointer;
   border-bottom: 3px solid transparent;
   margin-bottom: -2px;
   transition: all 0.15s;
   white-space: nowrap;
 }
+.reporte-tab-btn:hover  { color: var(--azul-oscuro, #2F80ED); }
+.reporte-tab-btn.activo {
+  color: var(--azul-oscuro, #2F80ED);
+  border-bottom-color: var(--azul-oscuro, #2F80ED);
+}
 
-.reporte-tab-btn:hover  { color: var(--verde-medio); }
-.reporte-tab-btn.activo { color: var(--verde-oscuro); border-bottom-color: var(--verde-medio); }
+.reporte-panel         { display: none; }
+.reporte-panel.activo  { display: block; }
 
-.reporte-panel { display: none; }
-.reporte-panel.activo { display: block; }
-
-/* ── Filtro de fechas ── */
+/* ══════════════════════════════════════
+   FILTROS DE FECHA
+══════════════════════════════════════ */
 .filtro-fechas {
   display: flex;
   align-items: flex-end;
   gap: 0.8rem;
   flex-wrap: wrap;
   padding: 1rem;
-  background: var(--gris-claro);
+  background: var(--gris-claro, #F6FAFD);
   border-radius: 10px;
   margin-bottom: 1.2rem;
 }
 
 .filtro-fechas .form-grupo {
   flex: 1;
-  min-width: 150px;
+  min-width: 140px;
 }
 
-/* ── Tabla de usuarios ── */
+/* ══════════════════════════════════════
+   TABLA DE USUARIOS
+══════════════════════════════════════ */
 .tabla-usuarios {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
+
 .tabla-usuarios thead {
-  background: var(--verde-oscuro);
-  color: white;
+  background: var(--azul-suave, #EAF8FF);
+  color: var(--negro-suave, #1F2937);
 }
 .tabla-usuarios thead th {
   padding: 0.75rem 1rem;
@@ -193,16 +216,19 @@
   letter-spacing: 0.05em;
 }
 .tabla-usuarios tbody tr {
-  border-bottom: 1px solid var(--gris-borde);
+  border-bottom: 1px solid var(--gris-borde, #E3EEF6);
   transition: background 0.15s;
 }
-.tabla-usuarios tbody tr:hover { background: var(--verde-suave); }
+.tabla-usuarios tbody tr:hover { background: var(--azul-suave, #EAF8FF); }
 .tabla-usuarios tbody td { padding: 0.75rem 1rem; vertical-align: middle; }
 
-.badge-admin  { background: #ede9fe; color: #6d28d9; font-weight: 700; }
-.badge-usuario { background: #e0f4ed; color: var(--verde-oscuro); font-weight: 700; }
+/* Badges de rol */
+.badge-admin   { background: #ede9fe; color: #6d28d9; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; }
+.badge-usuario { background: var(--azul-suave, #EAF8FF); color: var(--azul-oscuro, #2F80ED); font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; }
 
-/* ── Modal de nuevo usuario ── */
+/* ══════════════════════════════════════
+   MODAL DE USUARIO (crear/editar)
+══════════════════════════════════════ */
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -212,122 +238,98 @@
 }
 
 /* ══════════════════════════════════════
-   RESPONSIVE MÓVIL — navbar y auth
-   Agrega esto AL FINAL de auth.css
+   RESPONSIVE MÓVIL — auth.css
+   Pantallas ≤ 768px
 ══════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── Navbar: se parte en dos filas ──
-     Fila 1: enlaces de navegación
-     Fila 2: usuario + logout           */
+  /* Navbar: dos filas
+     Fila 1: enlaces con scroll horizontal
+     Fila 2: usuario + logout alineados a la derecha */
   .nav-principal {
     flex-wrap: wrap;
-    padding: 0.4rem 0.75rem;
+    padding: 0 0.75rem;
     gap: 0;
     min-height: unset;
   }
 
-  /* Los enlaces ocupan toda la fila superior */
   .nav-enlaces {
     width: 100%;
-    overflow-x: auto;              /* scroll horizontal si no caben */
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 0.3rem 0;
+    padding: 0.4rem 0;
     gap: 0.1rem;
-    /* Oculta la scrollbar visualmente pero permite el gesto */
-    scrollbar-width: none;
+    scrollbar-width: none; /* Firefox */
   }
-  .nav-enlaces::-webkit-scrollbar {
-    display: none;
-  }
+  .nav-enlaces::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
   .nav-link {
     font-size: 0.78rem;
     padding: 0.35rem 0.55rem;
-    white-space: nowrap;           /* no romper el texto del enlace */
   }
 
-  /* Usuario + logout en fila inferior, alineados a la derecha */
+  /* Fila inferior: usuario + botón salir */
   .nav-usuario {
     width: 100%;
     justify-content: flex-end;
     padding: 0.3rem 0;
-    border-top: 1px solid var(--gris-borde);
+    border-top: 1px solid var(--gris-borde, #E3EEF6);
     font-size: 0.78rem;
     gap: 0.4rem;
   }
 
-  .nav-badge-rol {
-    font-size: 0.7rem;
-  }
+  .nav-badge-rol { font-size: 0.7rem; }
 
   .btn-logout {
     padding: 0.25rem 0.6rem;
     font-size: 0.75rem;
   }
 
-  /* ── Resumen de reportes: 2 columnas en móvil ── */
-  .resumen-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* Tarjetas resumen: 2 columnas en móvil */
+  .resumen-grid { grid-template-columns: repeat(2, 1fr); }
+  .resumen-card .numero { font-size: 1.5rem; }
 
-  .resumen-card .numero {
-    font-size: 1.5rem;
-  }
-
-  /* ── Tabs de reportes: scroll horizontal ── */
+  /* Tabs: scroll horizontal */
   .reporte-tabs {
     overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-bottom: 2px;
   }
-  .reporte-tabs::-webkit-scrollbar {
-    display: none;
-  }
+  .reporte-tabs::-webkit-scrollbar { display: none; }
 
   .reporte-tab-btn {
-    font-size: 0.78rem;
-    padding: 0.4rem 0.7rem;
-    white-space: nowrap;
+    font-size: 0.76rem;
+    padding: 0.4rem 0.65rem;
   }
 
-  /* ── Filtros de fecha en columna ── */
+  /* Filtros de fecha en columna */
   .filtro-fechas {
     flex-direction: column;
     gap: 0.6rem;
   }
-
   .filtro-fechas .form-grupo {
     min-width: unset;
     width: 100%;
   }
-
   .filtro-fechas .btn {
     width: 100%;
     justify-content: center;
   }
 
-  /* ── Tabla de usuarios scrollable ── */
-  .tabla-usuarios {
-    min-width: 480px;
-  }
+  /* Tabla de usuarios con scroll */
+  .tabla-usuarios { min-width: 480px; }
 }
 
-/* ── Pantallas muy pequeñas (< 380px) ── */
+/* Pantallas muy pequeñas ≤ 380px */
 @media (max-width: 380px) {
   .nav-link {
     font-size: 0.72rem;
     padding: 0.3rem 0.4rem;
   }
-
   .resumen-grid {
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
   }
-
-  .resumen-card {
-    padding: 0.75rem 0.5rem;
-  }
+  .resumen-card { padding: 0.75rem 0.5rem; }
 }
