@@ -1,5 +1,5 @@
 /* ============================================================
-   style.css - Estilos de la Farmacia Clínica
+   style.css — Estilos de la Farmacia Clínica
    ============================================================
    Usamos variables CSS para colores principales.
    Así si quieres cambiar el color de la app, solo
@@ -8,29 +8,31 @@
 
 /* ── Variables globales de color y tipografía ── */
 :root {
-  --verde-oscuro:  #2F80ED;
-  --verde-medio:   #4FC3F7;
-  --verde-claro:   #7C5CFF;
-  --verde-suave:   #EAF8FF;
-
+  --verde-oscuro:  #0a4a3a;
+  --verde-medio:   #0f6b54;
+  --verde-claro:   #1a9070;
+  --verde-suave:   #e8f5f1;
   --blanco:        #ffffff;
-  --gris-claro:    #F6FAFD;
-  --gris-borde:    #E3EEF6;
-  --gris-texto:    #6B7280;
-  --negro-suave:   #1F2937;
+  --gris-claro:    #f4f6f5;
+  --gris-borde:    #d1ddd9;
+  --gris-texto:    #4a5e58;
+  --negro-suave:   #1a2620;
 
-  --rojo:          #E74C3C;
-  --rojo-suave:    #FDECEC;
-  --rojo-borde:    #F5B7B1;
-  --amarillo:      #F2B84B;
-  --amarillo-suave:#FFF7E6;
-  --amarillo-borde:#FFD580;
+  /* Alertas */
+  --rojo:          #c0392b;
+  --rojo-suave:    #fdecea;
+  --rojo-borde:    #e74c3c;
+  --amarillo:      #d4820a;
+  --amarillo-suave:#fff8e6;
+  --amarillo-borde:#f0a500;
 
+  /* Tipografía */
   --fuente-titulo: 'DM Serif Display', Georgia, serif;
   --fuente-cuerpo: 'DM Sans', 'Segoe UI', sans-serif;
 
-  --sombra-suave: 0 8px 24px rgba(47, 128, 237, 0.08);
-  --sombra-media: 0 12px 32px rgba(47, 128, 237, 0.14);
+  /* Sombras */
+  --sombra-suave: 0 2px 12px rgba(10, 74, 58, 0.08);
+  --sombra-media: 0 4px 24px rgba(10, 74, 58, 0.14);
 }
 
 /* ── Reset básico ── */
@@ -52,35 +54,33 @@ body {
    ENCABEZADO / HEADER
 ══════════════════════════════════════ */
 header {
-  background: white;
-  padding: 1rem 0;
+  background: linear-gradient(135deg, var(--verde-oscuro) 0%, var(--verde-medio) 100%);
+  color: var(--blanco);
+  padding: 1.2rem 2rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #E3EEF6;
-  box-shadow: 0 4px 18px rgba(47,128,237,0.05);
+  gap: 1rem;
+  box-shadow: var(--sombra-media);
   position: sticky;
   top: 0;
   z-index: 100;
-}
-
-.header-logo {
-  height: auto;
-  width: 180px;
-  display: block;
-  object-fit: contain;
-  filter:
-    drop-shadow(0 6px 18px rgba(79,195,247,0.12));
-}
-
-.header-logo:hover {
-  transform: scale(1.03);
 }
 
 .header-icono {
   font-size: 2rem;
 }
 
+.header-texto h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+}
+
+.header-texto p {
+  font-size: 0.82rem;
+  opacity: 0.75;
+  margin-top: -2px;
+}
 
 /* ══════════════════════════════════════
    CONTENEDOR PRINCIPAL
@@ -154,15 +154,22 @@ main {
 ══════════════════════════════════════ */
 .card {
   background: var(--blanco);
-  border-radius: 22px;
+  border-radius: 14px;
   padding: 1.8rem;
-  box-shadow: 0 10px 30px rgba(47, 128, 237, 0.08);
+  box-shadow: var(--sombra-suave);
   border: 1px solid var(--gris-borde);
 }
 
 .card-titulo {
-  color: var(--negro-suave);
+  font-family: var(--fuente-titulo);
+  font-size: 1.25rem;
+  color: var(--verde-oscuro);
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.7rem;
   border-bottom: 2px solid var(--verde-suave);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ══════════════════════════════════════
@@ -240,14 +247,12 @@ main {
 
 /* Verde principal */
 .btn-primario {
-  background: linear-gradient(135deg, #4FC3F7 0%, #7C5CFF 100%);
+  background: var(--verde-medio);
   color: var(--blanco);
-  border-radius: 14px;
 }
-
 .btn-primario:hover {
-  background: linear-gradient(135deg, #29AEEA 0%, #6A4DFF 100%);
-  box-shadow: 0 8px 20px rgba(79, 195, 247, 0.30);
+  background: var(--verde-oscuro);
+  box-shadow: 0 4px 12px rgba(10, 74, 58, 0.3);
 }
 
 /* Secundario / cancelar */
@@ -334,8 +339,8 @@ table {
 }
 
 thead {
-  background: #EAF8FF;
-  color: #1F2937;
+  background: var(--verde-oscuro);
+  color: var(--blanco);
 }
 
 thead th {
@@ -348,8 +353,9 @@ thead th {
   white-space: nowrap;
 }
 
-tbody tr:hover {
-  background: #F4FBFF;
+tbody tr {
+  border-bottom: 1px solid var(--gris-borde);
+  transition: background 0.15s;
 }
 
 tbody tr:last-child {
@@ -525,7 +531,7 @@ footer {
 }
 
 /* ══════════════════════════════════════
-   RESPONSIVE - pantallas pequeñas
+   RESPONSIVE — pantallas pequeñas
 ══════════════════════════════════════ */
 @media (max-width: 640px) {
   header {
@@ -547,5 +553,97 @@ footer {
   .tabla-controles {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE MÓVIL — v4 fix
+   Agrega esto AL FINAL de style.css
+══════════════════════════════════════ */
+
+/* Evita scroll horizontal en toda la página */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+
+  /* ── Header compacto ── */
+  header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .header-logo {
+    height: 28px;
+  }
+
+  .header-texto h1 {
+    font-size: 1.2rem;
+  }
+
+  .header-texto p {
+    font-size: 0.75rem;
+  }
+
+  /* ── Contenido principal al 100% ── */
+  main {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+
+  /* ── Cards sin padding excesivo ── */
+  .card {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  /* ── Formularios en columna única ── */
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .form-botones {
+    flex-direction: column;
+  }
+
+  .form-botones .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── Buscador de inventario ── */
+  #buscador {
+    width: 100%;
+  }
+
+  .tabla-controles {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  /* ── Tablas: scroll horizontal limpio ── */
+  .tabla-contenedor {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 500px; /* fuerza scroll antes de colapsar */
+  }
+
+  /* ── Modal más angosto ── */
+  .modal {
+    width: 95%;
+    padding: 1.2rem;
+  }
+
+  /* ── Footer compacto ── */
+  footer {
+    padding: 1rem;
+    font-size: 0.75rem;
   }
 }
