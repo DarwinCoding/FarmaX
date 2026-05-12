@@ -1,5 +1,5 @@
 // ============================================================
-// routes/reportes.js — Módulo de reportes
+// routes/reportes.js - Módulo de reportes
 // ============================================================
 // RUTAS:
 //   GET /api/reportes/inventario-general    → todos los medicamentos
@@ -206,7 +206,7 @@ router.get("/consumo-por-area", (req, res) => {
 module.exports = router;
 
 // ============================================================
-// EXPORTACIONES A EXCEL — Usando ExcelJS
+// EXPORTACIONES A EXCEL - Usando ExcelJS
 // ============================================================
 // Estas rutas generan y descargan archivos .xlsx
 // ============================================================

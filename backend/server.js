@@ -1,5 +1,5 @@
 // ============================================================
-// server.js — Servidor principal (v3: +Auth +Reportes)
+// server.js - Servidor principal (v3: +Auth +Reportes)
 // ============================================================
 const express     = require("express");
 const path        = require("path");
@@ -87,7 +87,7 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log("╔══════════════════════════════════════════╗");
-  console.log("║  🏥 FARMACIA CLÍNICA — Sistema v4.0      ║");
+  console.log("║  🏥 FARMACIA CLÍNICA - Sistema v4.0      ║");
   console.log("║  +Excel  +Órdenes Especiales             ║");
   console.log("╚══════════════════════════════════════════╝");
   console.log(`\n✅ Servidor en: http://localhost:${PORT}`);

@@ -1,5 +1,5 @@
 // ============================================================
-// routes/usuarios.js — Gestión de usuarios (solo admin)
+// routes/usuarios.js - Gestión de usuarios (solo admin)
 // ============================================================
 // RUTAS (todas protegidas por requireRol("admin") en server.js):
 //   GET    /api/usuarios          → listar todos

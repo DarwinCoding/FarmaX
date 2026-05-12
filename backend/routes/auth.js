@@ -1,5 +1,5 @@
 // ============================================================
-// routes/auth.js — Login, Logout y verificación de sesión
+// routes/auth.js - Login, Logout y verificación de sesión
 // ============================================================
 // RUTAS:
 //   POST /api/auth/login    → iniciar sesión

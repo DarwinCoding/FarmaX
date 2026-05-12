@@ -1,5 +1,5 @@
 // ============================================================
-// database.js — Configuración y creación de la base de datos
+// database.js - Configuración y creación de la base de datos
 // ============================================================
 // Este archivo se encarga de:
 //   1. Crear (o abrir) el archivo SQLite "farmacia.db"
@@ -36,7 +36,7 @@ db.exec(`
 `);
 
 // ──────────────────────────────────────────────
-// NUEVAS TABLAS — Órdenes de Despacho (Fase 2)
+// NUEVAS TABLAS - Órdenes de Despacho (Fase 2)
 // Se agregan aquí para compartir la misma conexión
 // y el mismo archivo de base de datos.
 // ──────────────────────────────────────────────
@@ -65,7 +65,7 @@ db.exec(`
 `);
 
 // ──────────────────────────────────────────────
-// NUEVA TABLA — Órdenes Especiales (Fase 4)
+// NUEVA TABLA - Órdenes Especiales (Fase 4)
 // Registra entregas a médicos o personal que se cobran aparte
 // y descuenta del stock general.
 // ──────────────────────────────────────────────
@@ -89,7 +89,7 @@ console.log("✅ Base de datos lista en:", DB_PATH);
 module.exports = db;
 
 // ──────────────────────────────────────────────
-// NUEVAS TABLAS — Fase 3: Usuarios y Sesiones
+// NUEVAS TABLAS - Fase 3: Usuarios y Sesiones
 // ──────────────────────────────────────────────
 
 // Tabla de usuarios del sistema

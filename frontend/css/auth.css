@@ -1,5 +1,5 @@
 /* ============================================================
-   auth.css — Estilos para navbar con usuario y logout (Fase 3)
+   auth.css - Estilos para navbar con usuario y logout (Fase 3)
    Se carga en todas las páginas protegidas.
    NO modifica style.css ni ordenes.css.
    ============================================================ */
@@ -74,12 +74,6 @@
   background: var(--rojo-suave);
   border-color: var(--rojo-borde);
   color: var(--rojo);
-}
-
-/* ── Header con logo ── */
-.header-logo {
-  height: 36px;
-  width: auto;
 }
 
 /* ── Reportes: badges de estado en tablas ── */

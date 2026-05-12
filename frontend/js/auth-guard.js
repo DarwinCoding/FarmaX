@@ -1,5 +1,5 @@
 // ============================================================
-// auth-guard.js — Protección de páginas frontend
+// auth-guard.js - Protección de páginas frontend
 // ============================================================
 // Cada página protegida carga este script PRIMERO.
 // Si el usuario no tiene sesión activa, lo redirige al login.

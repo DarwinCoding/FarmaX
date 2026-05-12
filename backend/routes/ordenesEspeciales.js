@@ -1,5 +1,5 @@
 // ============================================================
-// routes/ordenesEspeciales.js — Órdenes Especiales (Nuevo módulo)
+// routes/ordenesEspeciales.js - Órdenes Especiales (Nuevo módulo)
 // ============================================================
 // RUTAS:
 //   GET    /api/ordenes-especiales           → lista todas las órdenes especiales

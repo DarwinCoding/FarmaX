@@ -1,5 +1,5 @@
 // ============================================================
-// app.js — Lógica principal del frontend
+// app.js - Lógica principal del frontend
 // ============================================================
 // Este archivo se comunica con la API del backend
 // y actualiza la interfaz según las acciones del usuario.
@@ -228,7 +228,7 @@ function actualizarAlertas(lista) {
       <div class="alerta-seccion rojo">
         <div class="alerta-titulo rojo">🚨 Stock bajo (menos de 5 unidades)</div>
         <ul class="alerta-lista">
-          ${stockBajo.map(m => `<li><strong>${m.nombre}</strong> — ${m.stock} unidades</li>`).join("")}
+          ${stockBajo.map(m => `<li><strong>${m.nombre}</strong> - ${m.stock} unidades</li>`).join("")}
         </ul>
       </div>`;
   }
@@ -244,7 +244,7 @@ function actualizarAlertas(lista) {
             const etiqueta = dias < 0
               ? `<strong style="color:var(--rojo)">CADUCADO</strong>`
               : `vence en ${dias} días`;
-            return `<li><strong>${m.nombre}</strong> — ${etiqueta} (${formatearFecha(m.caducidad)})</li>`;
+            return `<li><strong>${m.nombre}</strong> - ${etiqueta} (${formatearFecha(m.caducidad)})</li>`;
           }).join("")}
         </ul>
       </div>`;
@@ -255,7 +255,7 @@ function actualizarAlertas(lista) {
 }
 
 // ──────────────────────────────────────────────
-// 5. FORMULARIO — AGREGAR / EDITAR
+// 5. FORMULARIO - AGREGAR / EDITAR
 // ──────────────────────────────────────────────
 
 /**
@@ -388,7 +388,7 @@ function cerrarModal() {
 }
 
 // ──────────────────────────────────────────────
-// 7. TOAST — Notificaciones en la esquina
+// 7. TOAST - Notificaciones en la esquina
 // ──────────────────────────────────────────────
 
 /**

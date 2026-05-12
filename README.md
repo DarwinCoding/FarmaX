@@ -1,4 +1,4 @@
-# 💊 Farmacia Clínica — Sistema de Inventario
+# 💊 Farmacia Clínica - Sistema de Inventario
 
 Sistema web local para administrar el inventario de medicamentos de una farmacia dentro de una clínica.
 
@@ -44,20 +44,20 @@ Si no lo tienes, descárgalo desde: https://nodejs.org
 
 ---
 
-### Paso 1 — Descargar / copiar el proyecto
+### Paso 1 - Descargar / copiar el proyecto
 
 Coloca la carpeta `farmacia-clinica` en cualquier lugar de tu computadora.
 
 ---
 
-### Paso 2 — Abrir una terminal en la carpeta del proyecto
+### Paso 2 - Abrir una terminal en la carpeta del proyecto
 
 - **Windows**: Clic derecho dentro de la carpeta → "Abrir en Terminal"
 - **Mac/Linux**: `cd ruta/hacia/farmacia-clinica`
 
 ---
 
-### Paso 3 — Instalar dependencias
+### Paso 3 - Instalar dependencias
 
 ```bash
 npm install
@@ -68,7 +68,7 @@ Solo necesitas hacerlo la primera vez.
 
 ---
 
-### Paso 4 — Iniciar el servidor
+### Paso 4 - Iniciar el servidor
 
 ```bash
 npm start
@@ -78,7 +78,7 @@ Verás en la terminal:
 ```
 ✅ Base de datos lista en: .../backend/data/farmacia.db
 ╔════════════════════════════════════════╗
-║   🏥 FARMACIA CLÍNICA — Sistema v1.0   ║
+║   🏥 FARMACIA CLÍNICA - Sistema v1.0   ║
 ╚════════════════════════════════════════╝
 
 ✅ Servidor corriendo en: http://localhost:3000
@@ -86,7 +86,7 @@ Verás en la terminal:
 
 ---
 
-### Paso 5 — Abrir la aplicación
+### Paso 5 - Abrir la aplicación
 
 Abre tu navegador y visita:
 
@@ -104,7 +104,7 @@ Presiona `Ctrl + C` en la terminal.
 
 ---
 
-## 🔌 API — Referencia de endpoints
+## 🔌 API - Referencia de endpoints
 
 | Método | URL                        | Acción                    |
 |--------|----------------------------|---------------------------|

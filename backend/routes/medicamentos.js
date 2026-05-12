@@ -1,5 +1,5 @@
 // ============================================================
-// routes/medicamentos.js — Rutas CRUD para medicamentos
+// routes/medicamentos.js - Rutas CRUD para medicamentos
 // ============================================================
 // Aquí definimos qué pasa cuando el frontend llama a la API.
 // CRUD = Create (crear), Read (leer), Update (editar), Delete (eliminar)

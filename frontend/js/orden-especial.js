@@ -1,5 +1,5 @@
 // ============================================================
-// orden-especial.js — Lógica del módulo de Órdenes Especiales
+// orden-especial.js - Lógica del módulo de Órdenes Especiales
 // ============================================================
 
 const API_OE   = "/api/ordenes-especiales";
@@ -12,7 +12,7 @@ let medicamentoSeleccionado = null;
 
 // Formatea fecha YYYY-MM-DD a DD/MM/YYYY
 function fmt(fecha) {
-  if (!fecha) return "—";
+  if (!fecha) return "-";
   const [a, m, d] = fecha.split("-");
   return `${d}/${m}/${a}`;
 }
@@ -100,7 +100,7 @@ function buscarMedicamento(texto) {
       onmouseout="this.style.background=''"
     >
       <strong>${esc(m.nombre)}</strong>
-      <span style="color:var(--gris-texto)"> — ${esc(m.presentacion)}</span>
+      <span style="color:var(--gris-texto)"> - ${esc(m.presentacion)}</span>
       <span style="float:right;color:${m.stock < 5 ? 'var(--rojo)' : 'var(--verde-oscuro)'};font-weight:700">
         Stock: ${m.stock}
       </span>
@@ -115,7 +115,7 @@ function seleccionarMedicamento(id) {
   if (!medicamentoSeleccionado) return;
 
   document.getElementById("oe-med-busqueda").value =
-    `${medicamentoSeleccionado.nombre} — ${medicamentoSeleccionado.presentacion}`;
+    `${medicamentoSeleccionado.nombre} - ${medicamentoSeleccionado.presentacion}`;
   document.getElementById("oe-medicamento-id").value = id;
   document.getElementById("oe-autocomplete").style.display = "none";
   document.getElementById("oe-stock-info").textContent =
@@ -226,7 +226,7 @@ async function cargarHistorial() {
                 <span style="font-size:.78rem;color:var(--gris-texto)">(${esc(o.presentacion)})</span>
               </td>
               <td style="padding:.65rem 1rem;text-align:center;font-weight:700;color:var(--verde-oscuro)">${o.cantidad}</td>
-              <td style="padding:.65rem 1rem;color:var(--gris-texto);font-size:.83rem">${esc(o.observacion) || "—"}</td>
+              <td style="padding:.65rem 1rem;color:var(--gris-texto);font-size:.83rem">${esc(o.observacion) || "-"}</td>
               ${esAdmin ? `
                 <td style="padding:.65rem 1rem;text-align:center">
                   <button

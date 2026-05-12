@@ -1,5 +1,5 @@
 // ============================================================
-// usuarios.js — Gestión de usuarios (solo admin)
+// usuarios.js - Gestión de usuarios (solo admin)
 // ============================================================
 
 const API = "/api/usuarios";
@@ -22,7 +22,7 @@ function toast(msg, tipo = "ok") {
 }
 
 function fmtFecha(str) {
-  if (!str) return "—";
+  if (!str) return "-";
   return new Date(str).toLocaleDateString("es-EC", {day:"2-digit",month:"short",year:"numeric"});
 }
 

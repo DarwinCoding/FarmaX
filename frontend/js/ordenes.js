@@ -1,5 +1,5 @@
 // ============================================================
-// ordenes.js — Lógica de Órdenes de Despacho
+// ordenes.js - Lógica de Órdenes de Despacho
 // ============================================================
 // Este archivo es NUEVO y completamente independiente de app.js.
 // Solo se carga en ordenes.html.
@@ -92,7 +92,7 @@ async function cargarListaOrdenes() {
       return `
         <div class="orden-card">
           <div class="orden-card-info">
-            <span class="orden-card-titulo">Orden #${o.id} — ${o.area}</span>
+            <span class="orden-card-titulo">Orden #${o.id} - ${o.area}</span>
             <span class="orden-card-sub">📅 ${fechaFmt} · ${o.total_items} ítem(s)</span>
           </div>
           <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap">
@@ -168,7 +168,7 @@ function renderizarCarrito() {
 
   // Encabezado de la orden activa
   document.getElementById("orden-activa-titulo").textContent =
-    `Orden #${ordenActiva.id} — ${ordenActiva.area}`;
+    `Orden #${ordenActiva.id} - ${ordenActiva.area}`;
   document.getElementById("orden-activa-fecha").textContent =
     `📅 ${formatearFecha(ordenActiva.fecha)} · Estado: ${ordenActiva.estado}`;
 
@@ -223,7 +223,7 @@ function renderizarCarrito() {
           <td>
             ${esPendiente
               ? `<button class="btn btn-eliminar" onclick="eliminarLineaCarrito(${linea.id})">🗑</button>`
-              : "—"
+              : "-"
             }
           </td>
         </tr>`;
@@ -380,7 +380,7 @@ function mostrarAutocomplete(lista) {
       <div class="autocomplete-item" onclick="seleccionarMedicamento(${m.id})">
         <span>
           <strong>${escaparHTML(m.nombre)}</strong>
-          <span style="color:var(--gris-texto)"> — ${escaparHTML(m.presentacion)}</span>
+          <span style="color:var(--gris-texto)"> - ${escaparHTML(m.presentacion)}</span>
         </span>
         <span class="stock-info ${stockClase}">
           ${m.stock < 5 ? "⚠ " : ""}${m.stock} en stock
@@ -467,7 +467,7 @@ function cambiarTab(tabId) {
 }
 
 // ──────────────────────────────────────────────
-// UTILIDADES — Reutilizamos las mismas funciones
+// UTILIDADES - Reutilizamos las mismas funciones
 // que en app.js para mantener consistencia
 // ──────────────────────────────────────────────
 

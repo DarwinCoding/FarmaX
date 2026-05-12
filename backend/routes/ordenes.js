@@ -1,5 +1,5 @@
 // ============================================================
-// routes/ordenes.js — Rutas de Órdenes de Despacho
+// routes/ordenes.js - Rutas de Órdenes de Despacho
 // ============================================================
 // RUTAS DISPONIBLES:
 //   POST   /api/ordenes                    → crear orden nueva

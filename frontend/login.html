@@ -9,124 +9,205 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/style.css"/>
   <style>
-    /* ── Estilos exclusivos de la página de login ── */
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(145deg, #0a4a3a 0%, #1a9070 60%, #e8f5f1 100%);
-    }
+  /* ─────────────────────────────────────
+     LOGIN MODERNO — FARMAX / MEDISTOCK
+  ───────────────────────────────────── */
 
-    .login-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 20px 60px rgba(10, 74, 58, 0.3);
-      text-align: center;
-    }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 
-    .login-logo {
-      margin-bottom: 0.4rem;
-    }
+    font-family: 'DM Sans', sans-serif;
 
-    .login-logo img {
-      width: auto;
-      height: 90px;
-    }
+    background:
+      radial-gradient(circle at top left, #DFF4FF 0%, transparent 30%),
+      radial-gradient(circle at bottom right, #EEE5FF 0%, transparent 30%),
+      linear-gradient(135deg, #F8FBFF 0%, #EEF6FF 100%);
+  }
 
-    .login-titulo {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: 1.4rem;
-      color: var(--verde-oscuro);
-      margin-bottom: 0.3rem;
-    }
+  .login-card {
+  background: rgba(255,255,255,0.92);
 
-    .login-subtitulo {
-      font-size: 0.83rem;
-      color: var(--gris-texto);
-      margin-bottom: 1.8rem;
-    }
+  backdrop-filter: blur(10px);
 
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      text-align: left;
-    }
+  border: 1px solid #E3EEF6;
 
-    .login-form .form-grupo label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--verde-oscuro);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.35rem;
-    }
+  border-radius: 24px;
 
-    .login-form input {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 8px;
-      font-family: var(--fuente-cuerpo);
-      font-size: 0.95rem;
-      background: var(--gris-claro);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
+  padding: 2rem 1.8rem;
 
-    .login-form input:focus {
-      border-color: var(--verde-claro);
-      box-shadow: 0 0 0 3px rgba(26, 144, 112, 0.15);
-    }
+  width: 100%;
+  max-width: 360px;
 
-    .btn-login {
-      width: 100%;
-      padding: 0.8rem;
-      background: var(--verde-oscuro);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-family: var(--fuente-cuerpo);
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: background 0.18s, box-shadow 0.18s;
-    }
+  box-shadow:
+    0 15px 45px rgba(47,128,237,0.10),
+    0 6px 18px rgba(124,92,255,0.08);
 
-    .btn-login:hover {
-      background: var(--verde-claro);
-      box-shadow: 0 4px 16px rgba(10, 74, 58, 0.3);
-    }
+  text-align: center;
+}
 
-    .btn-login:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+  .login-logo {
+    margin-bottom: 0.8rem;
+  }
 
-    #error-login {
-      display: none;
-      background: var(--rojo-suave);
-      color: var(--rojo);
-      border: 1px solid var(--rojo-borde);
-      border-radius: 8px;
-      padding: 0.6rem 0.9rem;
-      font-size: 0.88rem;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
+  .login-logo img {
+  width: auto;
+  height: 120px;
+}
 
-    .login-footer {
-      margin-top: 1.5rem;
-      font-size: 0.78rem;
-      color: var(--gris-texto);
-    }
-  </style>
+  .login-titulo {
+    font-family: 'DM Serif Display', Georgia, serif;
+
+    font-size: 1.6rem;
+
+    color: #1F2937;
+
+    margin-bottom: 0.4rem;
+  }
+
+  .login-subtitulo {
+    font-size: 0.88rem;
+
+    color: #6B7280;
+
+    margin-bottom: 2rem;
+  }
+
+  .login-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+    text-align: left;
+  }
+
+  .login-form .form-grupo label {
+    display: block;
+
+    font-size: 0.82rem;
+
+    font-weight: 700;
+
+    color: #4F46E5;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    margin-bottom: 0.45rem;
+  }
+
+  .login-form input {
+    width: 100%;
+
+    padding: 0.75rem 1rem;
+
+    border: 1.5px solid #DCEBFA;
+
+    border-radius: 14px;
+
+    font-family: 'DM Sans', sans-serif;
+
+    font-size: 0.96rem;
+
+    background: #F8FBFF;
+
+    outline: none;
+
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s,
+      transform 0.15s;
+  }
+
+  .login-form input:focus {
+    border-color: #4FC3F7;
+
+    box-shadow:
+      0 0 0 4px rgba(79,195,247,0.15);
+
+    background: white;
+
+    transform: translateY(-1px);
+  }
+
+  .btn-login {
+    width: 100%;
+
+    padding: 0.8rem;
+
+    background: linear-gradient(
+      135deg,
+      #4FC3F7 0%,
+      #7C5CFF 100%
+    );
+
+    color: white;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-family: 'DM Sans', sans-serif;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    margin-top: 0.7rem;
+
+    transition:
+      transform 0.18s,
+      box-shadow 0.18s;
+  }
+
+  .btn-login:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 12px 28px rgba(79,195,247,0.28);
+  }
+
+  .btn-login:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+  }
+
+  #error-login {
+    display: none;
+
+    background: #FDECEC;
+
+    color: #E74C3C;
+
+    border: 1px solid #F5B7B1;
+
+    border-radius: 12px;
+
+    padding: 0.8rem 1rem;
+
+    font-size: 0.88rem;
+
+    text-align: center;
+
+    margin-top: 0.7rem;
+  }
+
+  .login-footer {
+    margin-top: 1.8rem;
+
+    font-size: 0.8rem;
+
+    color: #6B7280;
+  }
+</style>
 </head>
 <body>
 
@@ -134,7 +215,7 @@
 
     <!-- Logo -->
     <div class="login-logo">
-      <img src="img/Logo.png" alt="Farmacia Clínica" />
+      <img src="img/LOGO FARMAX.png" alt="Farmacia Clínica" />
     </div>
 
     <h1 class="login-titulo">Bienvenido</h1>
@@ -168,7 +249,7 @@
       </button>
     </div>
 
-    <p class="login-footer">Farmacia Clínica v3.0 — Acceso restringido</p>
+    <p class="login-footer">FarmaX v1.0 - Acceso restringido</p>
   </div>
 
   <script>

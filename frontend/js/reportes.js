@@ -1,12 +1,12 @@
 // ============================================================
-// reportes.js — Lógica del módulo de reportes
+// reportes.js - Lógica del módulo de reportes
 // ============================================================
 
 const API = "/api/reportes";
 
 // ── Utilidades ──
 function fmt(fecha) {
-  if (!fecha) return "—";
+  if (!fecha) return "-";
   const [a,m,d] = fecha.split("-");
   return `${d}/${m}/${a}`;
 }
@@ -204,7 +204,7 @@ async function cargarCaducados() {
             </tr>`).join("")}
         </tbody>
       </table></div>
-      <p style="margin-top:.8rem;font-size:.8rem;color:var(--rojo);font-weight:600">🚨 ${data.length} medicamentos CADUCADOS — retirar del inventario</p>`;
+      <p style="margin-top:.8rem;font-size:.8rem;color:var(--rojo);font-weight:600">🚨 ${data.length} medicamentos CADUCADOS - retirar del inventario</p>`;
   } catch (e) { cont.innerHTML = `<p style="color:var(--rojo)">❌ ${e.message}</p>`; }
 }
 
@@ -242,7 +242,7 @@ async function cargarHistorial() {
         <div style="border:1px solid var(--gris-borde);border-radius:10px;margin-bottom:1rem;overflow:hidden">
           <div style="background:var(--gris-claro);padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
             <div>
-              <strong>Orden #${o.id}</strong> — ${esc(o.area)}
+              <strong>Orden #${o.id}</strong> - ${esc(o.area)}
               <span style="font-size:.8rem;color:var(--gris-texto);margin-left:.5rem">${fmt(o.fecha)}</span>
             </div>
             <div style="display:flex;gap:.6rem;align-items:center">
@@ -462,7 +462,7 @@ async function cargarOrdenesEspecialesReporte() {
                 <span style="font-size:.78rem;color:var(--gris-texto)">(${esc(o.presentacion)})</span>
               </td>
               <td style="padding:.65rem 1rem;text-align:center;font-weight:700;color:var(--verde-oscuro)">${o.cantidad}</td>
-              <td style="padding:.65rem 1rem;color:var(--gris-texto);font-size:.83rem">${esc(o.observacion) || "—"}</td>
+              <td style="padding:.65rem 1rem;color:var(--gris-texto);font-size:.83rem">${esc(o.observacion) || "-"}</td>
             </tr>
           `).join("")}
         </tbody>

@@ -1,5 +1,5 @@
 /* ============================================================
-   ordenes.css — Estilos NUEVOS para Órdenes de Despacho
+   ordenes.css - Estilos NUEVOS para Órdenes de Despacho
    ============================================================
    Este archivo SOLO contiene estilos nuevos.
    No modifica nada de style.css.
@@ -67,7 +67,7 @@
 }
 
 /* ══════════════════════════════════════
-   CARRITO ACTIVO — Caja de búsqueda
+   CARRITO ACTIVO - Caja de búsqueda
    y agregar medicamento
 ══════════════════════════════════════ */
 .orden-activa-header {
@@ -263,7 +263,7 @@
   color: var(--negro-suave);
 }
 
-/* Botón "Despachar" — prominente, verde oscuro */
+/* Botón "Despachar" - prominente, verde oscuro */
 .btn-despachar {
   background: var(--verde-oscuro);
   color: var(--blanco);

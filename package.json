@@ -1,7 +1,7 @@
 {
   "name": "farmacia-clinica",
   "version": "4.0.0",
-  "description": "Sistema de administración de farmacia para clínica v4.0 — +Excel +Órdenes Especiales",
+  "description": "Sistema de administración de farmacia para clínica v4.0 - +Excel +Órdenes Especiales",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
