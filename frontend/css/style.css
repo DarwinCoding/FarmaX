@@ -595,3 +595,149 @@ body.login-page {
 @media (max-width: 480px) {
   .header-logo { width: 120px; }
 }
+
+/* ══════════════════════════════════════
+   CLASES DE APOYO
+   Usadas en las páginas limpias (sin emojis)
+══════════════════════════════════════ */
+
+/* Cabecera de card con título + botón alineados */
+.card-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+/* Cuando .card-cabecera existe, el .card-titulo dentro no necesita margen propio */
+.card-cabecera .card-titulo {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Descripcion debajo del titulo de una card */
+.card-descripcion {
+  color: var(--gris-texto);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  margin-top: -0.8rem;
+}
+
+/* Fila de botones de accion del formulario (fuera del grid) */
+.form-acciones {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* Fila de acciones en panel de reporte */
+.panel-acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.8rem;
+}
+
+/* Campo de formulario que ocupa el ancho completo del grid */
+.form-grupo-full {
+  grid-column: 1 / -1;
+}
+
+/* Asterisco de campo requerido */
+.requerido {
+  color: var(--rojo);
+}
+
+/* Texto de campo opcional */
+.campo-opcional {
+  font-weight: 400;
+  text-transform: none;
+  color: var(--gris-texto);
+  font-size: 0.82rem;
+}
+
+/* Texto de ayuda debajo de un input */
+.campo-ayuda {
+  color: var(--gris-texto);
+  font-size: 0.8rem;
+  margin-top: 0.1rem;
+}
+
+/* Leyenda de alertas en el inventario */
+.leyenda-alertas {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+}
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.leyenda-item::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.leyenda-item.rojo::before    { background: var(--rojo); }
+.leyenda-item.amarillo::before { background: var(--amarillo); }
+
+/* Error dentro de modal de usuario */
+.form-error {
+  display: none;
+  color: var(--rojo);
+  font-size: 0.85rem;
+  background: var(--rojo-suave);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+/* Autocompletado de orden especial — posicionado por CSS, no inline */
+.oe-autocomplete-wrapper {
+  position: relative;
+}
+
+#oe-autocomplete {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--gris-borde);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .form-acciones {
+    flex-direction: column;
+  }
+  .form-acciones .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .panel-acciones {
+    justify-content: stretch;
+  }
+  .panel-acciones .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .card-cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

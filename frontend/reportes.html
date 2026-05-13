@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reportes - Farmacia Clínica</title>
+  <title>Reportes — FarmaX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
@@ -14,102 +14,97 @@
 <body>
 
   <header>
-    <img src="/img/logo.svg" alt="Farmacia Clínica" class="header-logo"/>
-    <div class="header-texto">
-      <h1>Farmacia Clínica</h1>
-      <p>Módulo de reportes y estadísticas</p>
-    </div>
+    <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
   </header>
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/" class="nav-link">💊 Inventario</a>
-      <a href="/ordenes.html" class="nav-link">📦 Órdenes</a>
-      <a href="/reportes.html" class="nav-link activo">📊 Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">⭐ Orden Especial</a>
-      <a href="/usuarios.html" class="nav-link" data-solo-admin>👥 Usuarios</a>
+      <a href="/"                    class="nav-link">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link activo">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
+      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
       <span class="nav-badge-rol" id="nav-rol"></span>
-      <button class="btn-logout" onclick="cerrarSesion()">⏻ Salir</button>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
   </nav>
 
   <main>
     <div class="card">
-      <h2 class="card-titulo">📊 Reportes del Sistema</h2>
+      <h2 class="card-titulo">Reportes del Sistema</h2>
 
-      <!-- ── TARJETAS DE RESUMEN ── -->
+      <!-- Tarjetas de resumen -->
       <div class="resumen-grid" id="resumen-grid">
         <div class="resumen-card">
-          <div class="numero" id="res-total">-</div>
+          <div class="numero" id="res-total">—</div>
           <div class="etiqueta">Total medicamentos</div>
         </div>
         <div class="resumen-card">
-          <div class="numero rojo" id="res-stock-bajo">-</div>
+          <div class="numero rojo" id="res-stock-bajo">—</div>
           <div class="etiqueta">Stock bajo</div>
         </div>
         <div class="resumen-card">
-          <div class="numero amarillo" id="res-por-caducar">-</div>
-          <div class="etiqueta">Por caducar (30 días)</div>
+          <div class="numero amarillo" id="res-por-caducar">—</div>
+          <div class="etiqueta">Por caducar (30 dias)</div>
         </div>
         <div class="resumen-card">
-          <div class="numero rojo" id="res-caducados">-</div>
+          <div class="numero rojo" id="res-caducados">—</div>
           <div class="etiqueta">Caducados</div>
         </div>
         <div class="resumen-card">
-          <div class="numero" id="res-ordenes">-</div>
-          <div class="etiqueta">Órdenes totales</div>
+          <div class="numero" id="res-ordenes">—</div>
+          <div class="etiqueta">Ordenes totales</div>
         </div>
       </div>
 
-      <!-- ── PESTAÑAS DE REPORTES ── -->
+      <!-- Pestanas de reportes -->
       <div class="reporte-tabs">
-        <button class="reporte-tab-btn activo" onclick="cambiarTab('inventario')">📋 Inventario general</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('stock-bajo')">🚨 Stock bajo</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('por-caducar')">⏰ Por caducar</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('caducados')">💀 Caducados</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('historial')">📦 Historial órdenes</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('consumo')">📈 Consumo por área</button>
-        <button class="reporte-tab-btn" onclick="cambiarTab('ordenes-especiales')">⭐ Órdenes Especiales</button>
+        <button class="reporte-tab-btn activo" onclick="cambiarTab('inventario')">Inventario general</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('stock-bajo')">Stock bajo</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('por-caducar')">Por caducar</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('caducados')">Caducados</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('historial')">Historial ordenes</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('consumo')">Consumo por area</button>
+        <button class="reporte-tab-btn" onclick="cambiarTab('ordenes-especiales')">Ordenes Especiales</button>
       </div>
 
-      <!-- ── PANEL: Inventario general ── -->
+      <!-- Panel: Inventario general -->
       <div class="reporte-panel activo" id="panel-inventario">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:.8rem">
-          <button class="btn btn-secundario" onclick="descargarExcel('inventario-general')">⬇ Descargar Excel</button>
+        <div class="panel-acciones">
+          <button class="btn btn-secundario" onclick="descargarExcel('inventario-general')">Descargar Excel</button>
         </div>
-        <div id="tabla-inventario-general"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-inventario-general"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Stock bajo ── -->
+      <!-- Panel: Stock bajo -->
       <div class="reporte-panel" id="panel-stock-bajo">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:.8rem">
-          <button class="btn btn-secundario" onclick="descargarExcel('stock-bajo')">⬇ Descargar Excel</button>
+        <div class="panel-acciones">
+          <button class="btn btn-secundario" onclick="descargarExcel('stock-bajo')">Descargar Excel</button>
         </div>
-        <div id="tabla-stock-bajo"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-stock-bajo"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Por caducar ── -->
+      <!-- Panel: Por caducar -->
       <div class="reporte-panel" id="panel-por-caducar">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:.8rem">
-          <button class="btn btn-secundario" onclick="descargarExcel('proximos-caducar')">⬇ Descargar Excel</button>
+        <div class="panel-acciones">
+          <button class="btn btn-secundario" onclick="descargarExcel('proximos-caducar')">Descargar Excel</button>
         </div>
-        <div id="tabla-por-caducar"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-por-caducar"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Caducados ── -->
+      <!-- Panel: Caducados -->
       <div class="reporte-panel" id="panel-caducados">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:.8rem">
-          <button class="btn btn-secundario" onclick="descargarExcel('caducados')">⬇ Descargar Excel</button>
+        <div class="panel-acciones">
+          <button class="btn btn-secundario" onclick="descargarExcel('caducados')">Descargar Excel</button>
         </div>
-        <div id="tabla-caducados"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-caducados"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Historial de órdenes ── -->
+      <!-- Panel: Historial de ordenes -->
       <div class="reporte-panel" id="panel-historial">
-        <!-- Filtro de fechas -->
         <div class="filtro-fechas">
           <div class="form-grupo">
             <label for="hist-fecha-inicio">Desde</label>
@@ -119,14 +114,14 @@
             <label for="hist-fecha-fin">Hasta</label>
             <input type="date" id="hist-fecha-fin"/>
           </div>
-          <button class="btn btn-primario" onclick="cargarHistorial()">🔍 Filtrar</button>
-          <button class="btn btn-secundario" onclick="limpiarFiltroHistorial()">✕ Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('historial-ordenes','hist-fecha-inicio','hist-fecha-fin')">⬇ Descargar Excel</button>
+          <button class="btn btn-primario" onclick="cargarHistorial()">Filtrar</button>
+          <button class="btn btn-secundario" onclick="limpiarFiltroHistorial()">Limpiar</button>
+          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('historial-ordenes','hist-fecha-inicio','hist-fecha-fin')">Descargar Excel</button>
         </div>
-        <div id="tabla-historial"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-historial"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Consumo por área ── -->
+      <!-- Panel: Consumo por area -->
       <div class="reporte-panel" id="panel-consumo">
         <div class="filtro-fechas">
           <div class="form-grupo">
@@ -137,17 +132,16 @@
             <label for="con-fecha-fin">Hasta</label>
             <input type="date" id="con-fecha-fin"/>
           </div>
-          <button class="btn btn-primario" onclick="cargarConsumo()">🔍 Filtrar</button>
-          <button class="btn btn-secundario" onclick="limpiarFiltroConsumo()">✕ Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('consumo-por-area','con-fecha-inicio','con-fecha-fin')">⬇ Descargar Excel</button>
+          <button class="btn btn-primario" onclick="cargarConsumo()">Filtrar</button>
+          <button class="btn btn-secundario" onclick="limpiarFiltroConsumo()">Limpiar</button>
+          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('consumo-por-area','con-fecha-inicio','con-fecha-fin')">Descargar Excel</button>
         </div>
-        <div id="tabla-consumo"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-consumo"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
-      <!-- ── PANEL: Órdenes Especiales ── -->
+      <!-- Panel: Ordenes Especiales -->
       <div class="reporte-panel" id="panel-ordenes-especiales">
-        <!-- Filtros -->
-        <div class="filtro-fechas" style="flex-wrap:wrap;gap:.8rem">
+        <div class="filtro-fechas">
           <div class="form-grupo">
             <label for="oe-rep-fecha-inicio">Desde</label>
             <input type="date" id="oe-rep-fecha-inicio"/>
@@ -160,25 +154,25 @@
             <label for="oe-rep-tipo">Tipo</label>
             <select id="oe-rep-tipo">
               <option value="">Todos</option>
-              <option value="médico">Médico</option>
+              <option value="médico">Medico</option>
               <option value="personal">Personal</option>
             </select>
           </div>
           <div class="form-grupo">
             <label for="oe-rep-nombre">Nombre</label>
-            <input type="text" id="oe-rep-nombre" placeholder="Buscar por nombre…"/>
+            <input type="text" id="oe-rep-nombre" placeholder="Buscar por nombre..."/>
           </div>
-          <button class="btn btn-primario" onclick="cargarOrdenesEspecialesReporte()">🔍 Filtrar</button>
-          <button class="btn btn-secundario" onclick="limpiarFiltrosOE()">✕ Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelOE()">⬇ Descargar Excel</button>
+          <button class="btn btn-primario" onclick="cargarOrdenesEspecialesReporte()">Filtrar</button>
+          <button class="btn btn-secundario" onclick="limpiarFiltrosOE()">Limpiar</button>
+          <button class="btn btn-secundario" onclick="descargarExcelOE()">Descargar Excel</button>
         </div>
-        <div id="tabla-ordenes-especiales-reporte"><p style="color:var(--gris-texto)">Cargando…</p></div>
+        <div id="tabla-ordenes-especiales-reporte"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
 
     </div>
   </main>
 
-  <footer>Farmacia Clínica v4.0 - Módulo de Reportes</footer>
+  <footer>FarmaX v4.0 — Modulo de Reportes</footer>
   <div id="toast-contenedor"></div>
   <script src="/js/reportes.js"></script>
 </body>
