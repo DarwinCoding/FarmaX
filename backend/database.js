@@ -129,3 +129,32 @@ if (adminExistente) {
 }
 
 console.log("✅ Usuario admin listo: admin / admin123");
+
+// ============================================================
+// PEGA ESTE BLOQUE AL FINAL DE: backend/database.js
+// ============================================================
+// Fase 5: migración segura de la columna "estado" en la tabla ordenes.
+//
+// El problema: la tabla "ordenes" ya existe con estado DEFAULT 'pendiente'.
+// Si corremos ALTER TABLE y ya existe la columna, SQLite lanza un error.
+// Usamos un bloque try/catch para que sea idempotente (se puede ejecutar
+// múltiples veces sin romper nada).
+// ============================================================
+
+// Intentamos agregar soporte explícito para el nuevo estado "para_revision".
+// La columna ya existe — esto solo confirma que los nuevos valores son válidos.
+// SQLite no tiene CHECK constraints obligatorios como Postgres, así que
+// con solo insertar el valor "para_revision" ya funciona.
+// No necesitamos ALTER TABLE — el campo ya es TEXT libre.
+
+// Sin embargo, sí creamos un índice para que las búsquedas por estado sean rápidas:
+try {
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_ordenes_estado
+    ON ordenes (estado)
+  `);
+  // console.log("✅ Índice de estado de órdenes listo");
+} catch (_) {
+  // El índice ya existe — no hacemos nada
+}
+

@@ -35,12 +35,16 @@
 
   <main>
     <div class="card">
+
+      <!-- TABS: 3 modos de trabajo -->
       <div class="tabs">
         <button class="tab-btn activo" id="tab-lista-btn">Ordenes registradas</button>
-        <button class="tab-btn" id="tab-carrito-btn">Carrito activo</button>
+        <button class="tab-btn"        id="tab-carrito-btn">Carrito activo</button>
       </div>
 
-      <!-- Panel: lista de ordenes -->
+      <!-- ═══════════════════════════════════════
+           PANEL 1: LISTA DE ORDENES (sin cambios)
+      ═══════════════════════════════════════ -->
       <div class="tab-panel activo" id="tab-lista-panel">
         <div class="form-nueva-orden" style="margin-bottom:1.5rem">
           <div class="form-grupo">
@@ -59,7 +63,9 @@
         <div id="lista-ordenes"><p style="color:var(--gris-texto)">Cargando ordenes...</p></div>
       </div>
 
-      <!-- Panel: carrito activo -->
+      <!-- ═══════════════════════════════════════
+           PANEL 2: CARRITO ACTIVO (sin cambios)
+      ═══════════════════════════════════════ -->
       <div class="tab-panel" id="tab-carrito-panel">
         <div id="carrito-vacio-msg" style="text-align:center;padding:3rem 1rem;color:var(--gris-texto)">
           <p style="font-size:1.5rem;margin-bottom:0.5rem">—</p>
@@ -112,11 +118,14 @@
           </div>
         </div>
       </div>
-    </div>
+
+    </div><!-- fin .card -->
   </main>
 
   <footer>FarmaX v4.0 — Modulo de Ordenes</footer>
   <div id="toast-contenedor"></div>
+
+  <!-- Scripts originales — SIN CAMBIOS -->
   <script src="/js/ordenes.js"></script>
 </body>
 </html>

@@ -122,6 +122,7 @@ router.post("/:id/detalle", (req, res) => {
     if (!orden) {
       return res.status(404).json({ error: "Orden no encontrada" });
     }
+    // PATCH Fase 5: solo bloqueamos si ya está completada
     if (orden.estado === "completada") {
       return res.status(400).json({ error: "No se puede modificar una orden ya despachada" });
     }
@@ -312,6 +313,58 @@ router.post("/:id/despachar", (req, res) => {
 
   } catch (err) {
     res.status(500).json({ error: "Error al despachar: " + err.message });
+  }
+});
+
+// ──────────────────────────────────────────────
+// DELETE /api/ordenes/:id
+// Elimina una orden completa y su detalle.
+//
+// REGLAS:
+//   - Solo admin puede eliminar (verificado en el middleware de session)
+//   - No se puede eliminar una orden "completada" (ya despachada)
+//   - Se eliminan en cascada las líneas de detalle_orden
+//   - NO se toca el stock (las órdenes eliminables aún no descontaron)
+// ──────────────────────────────────────────────
+router.delete("/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ── Control de rol: solo admin puede eliminar órdenes ──
+    // req.session.usuario lo pone el middleware requireAuth de server.js
+    if (!req.session.usuario || req.session.usuario.rol !== "admin") {
+      return res.status(403).json({
+        error: "Solo los administradores pueden eliminar órdenes."
+      });
+    }
+
+    // Verificamos que la orden exista
+    const orden = db.prepare("SELECT * FROM ordenes WHERE id = ?").get(id);
+    if (!orden) {
+      return res.status(404).json({ error: "Orden no encontrada" });
+    }
+
+    // Las órdenes completadas no se pueden borrar (forman parte del historial)
+    if (orden.estado === "completada") {
+      return res.status(400).json({
+        error: "No se puede eliminar una orden ya despachada. Forma parte del historial."
+      });
+    }
+
+    // Eliminamos el detalle primero, luego la orden
+    // (SQLite con ON DELETE CASCADE también lo haría solo, pero lo hacemos
+    //  explícito para mayor claridad y compatibilidad)
+    const eliminar = db.transaction(() => {
+      db.prepare("DELETE FROM detalle_orden WHERE orden_id = ?").run(id);
+      db.prepare("DELETE FROM ordenes WHERE id = ?").run(id);
+    });
+
+    eliminar();
+
+    res.json({ message: `Orden #${id} eliminada correctamente.` });
+
+  } catch (err) {
+    res.status(500).json({ error: "Error al eliminar orden: " + err.message });
   }
 });
 

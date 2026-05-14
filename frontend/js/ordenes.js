@@ -77,34 +77,43 @@ async function cargarListaOrdenes() {
     const ordenes = await apiGet(API_ORDENES);
 
     if (ordenes.length === 0) {
-      contenedor.innerHTML = `<div class="sin-ordenes">📭 Aún no hay órdenes creadas</div>`;
+      contenedor.innerHTML = `<div class="sin-ordenes"> Aún no hay órdenes creadas</div>`;
       return;
     }
 
     // Generamos una "tarjeta" por cada orden
     contenedor.innerHTML = ordenes.map(o => {
-      const estadoBadge = o.estado === "completada"
-        ? `<span class="estado-badge estado-completada">✓ Completada</span>`
-        : `<span class="estado-badge estado-pendiente">⏳ Pendiente</span>`;
+      const estadoBadge =
+        o.estado === "completada"
+          ? `<span class="estado-badge estado-completada">Completada</span>`
+          : `<span class="estado-badge estado-pendiente">Pendiente</span>`;
 
       const fechaFmt = formatearFecha(o.fecha);
+
+      // Botón eliminar: solo en órdenes NO completadas
+      const btnEliminar = o.estado !== "completada"
+        ? `<button class="btn btn-eliminar" onclick="eliminarOrden(${o.id})">
+             Eliminar
+           </button>`
+        : "";
 
       return `
         <div class="orden-card">
           <div class="orden-card-info">
             <span class="orden-card-titulo">Orden #${o.id} - ${o.area}</span>
-            <span class="orden-card-sub">📅 ${fechaFmt} · ${o.total_items} ítem(s)</span>
+            <span class="orden-card-sub"> ${fechaFmt} · ${o.total_items} ítem(s)</span>
           </div>
           <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap">
             ${estadoBadge}
             ${o.estado === "pendiente"
               ? `<button class="btn btn-primario" onclick="abrirOrdenEnCarrito(${o.id})">
-                   🛒 Abrir carrito
+                   Abrir carrito
                  </button>`
               : `<button class="btn btn-secundario" onclick="verResumenOrden(${o.id})">
-                   👁 Ver detalle
+                   Ver detalle
                  </button>`
             }
+            ${btnEliminar}
           </div>
         </div>`;
     }).join("");
@@ -170,9 +179,10 @@ function renderizarCarrito() {
   document.getElementById("orden-activa-titulo").textContent =
     `Orden #${ordenActiva.id} - ${ordenActiva.area}`;
   document.getElementById("orden-activa-fecha").textContent =
-    `📅 ${formatearFecha(ordenActiva.fecha)} · Estado: ${ordenActiva.estado}`;
+    ` ${formatearFecha(ordenActiva.fecha)} · Estado: ${ordenActiva.estado}`;
 
   // Mostramos u ocultamos el formulario de agregar según el estado
+  // Solo "pendiente" permite editar y despachar
   const esPendiente = ordenActiva.estado === "pendiente";
   document.getElementById("form-agregar-med").style.display = esPendiente ? "block" : "none";
   document.getElementById("btn-despachar").style.display    = esPendiente ? "inline-flex" : "none";
@@ -184,7 +194,7 @@ function renderizarCarrito() {
     tbody.innerHTML = `
       <tr>
         <td colspan="5" class="carrito-vacio">
-          🛒 Agrega medicamentos usando el buscador de arriba
+           Agrega medicamentos usando el buscador de arriba
         </td>
       </tr>`;
   } else {
@@ -429,7 +439,7 @@ async function despacharOrden() {
 
   const btn = document.getElementById("btn-despachar");
   btn.disabled    = true;
-  btn.textContent = "⏳ Despachando…";
+  btn.textContent = " Despachando…";
 
   try {
     await apiPost(`${API_ORDENES}/${ordenActiva.id}/despachar`, {});
@@ -499,6 +509,39 @@ function mostrarToast(mensaje, tipo = "exito") {
 // ──────────────────────────────────────────────
 // INICIALIZACIÓN
 // ──────────────────────────────────────────────
+
+// ──────────────────────────────────────────────
+// ELIMINAR ORDEN COMPLETA
+// Solo visible en órdenes no completadas.
+// Solo funciona si el usuario es admin (el backend lo valida también).
+// ──────────────────────────────────────────────
+
+/**
+ * Pide confirmación y elimina la orden junto con su detalle.
+ * No toca el stock porque solo se eliminan órdenes sin despachar.
+ * @param {number} id - ID de la orden a eliminar
+ */
+async function eliminarOrden(id) {
+  const confirmar = confirm(
+    `Seguro que deseas eliminar la Orden #${id}?\n\nEsta accion eliminara la orden y todos sus medicamentos. No se puede deshacer.`
+  );
+  if (!confirmar) return;
+
+  try {
+    const res = await fetch(`${API_ORDENES}/${id}`, { method: "DELETE" });
+
+    if (!res.ok) {
+      const datos = await res.json();
+      mostrarToast(datos.error || "Error al eliminar la orden", "error");
+      return;
+    }
+
+    mostrarToast(`Orden #${id} eliminada correctamente`);
+    cargarListaOrdenes(); // refrescamos la lista
+  } catch (err) {
+    mostrarToast("Error de conexion al eliminar la orden", "error");
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Cargamos el cache de medicamentos para el autocompletado
