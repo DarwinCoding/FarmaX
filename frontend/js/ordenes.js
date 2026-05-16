@@ -21,10 +21,13 @@
 
 const API_ORDENES      = "/api/ordenes";
 const API_MEDICAMENTOS = "/api/medicamentos";
+const API_AREAS        = "/api/configuracion/areas";
 
 let todosLosMedicamentos = []; // Cache de medicamentos para el autocompletado
 let ordenActiva          = null; // La orden que está abierta en el carrito
 let medicamentoSeleccionado = null; // Medicamento elegido en el autocompletado
+let stockMinimoGlobal = 5;
+const AREAS_RESPALDO = ["Hospitalización", "Quirófano"];
 
 // ──────────────────────────────────────────────
 // 2. FUNCIONES DE LA API
@@ -60,6 +63,34 @@ async function apiDelete(url) {
   const r = await fetch(url, { method: "DELETE" });
   if (!r.ok) { const e = await r.json(); throw new Error(e.error); }
   return r.json();
+}
+
+async function cargarConfiguracionOrdenes() {
+  try {
+    const config = await apiGet("/api/configuracion/general");
+    stockMinimoGlobal = config.stock_minimo_global;
+  } catch (_) {
+    // Si falla la configuracion, se conserva el default local.
+  }
+}
+
+async function cargarAreasOrdenes() {
+  const select = document.getElementById("select-area");
+  if (!select) return;
+
+  let areas = AREAS_RESPALDO.map(nombre => ({ nombre }));
+
+  try {
+    const data = await apiGet(API_AREAS);
+    if (Array.isArray(data) && data.length) areas = data;
+  } catch (_) {
+    // Si falla la carga, usamos el respaldo local.
+  }
+
+  select.innerHTML = `
+    <option value="" disabled selected>Seleccionar area...</option>
+    ${areas.map(area => `<option value="${escaparHTML(area.nombre)}">${escaparHTML(area.nombre)}</option>`).join("")}
+  `;
 }
 
 // ──────────────────────────────────────────────
@@ -385,7 +416,7 @@ function mostrarAutocomplete(lista) {
   }
 
   dropdown.innerHTML = lista.map(m => {
-    const stockClase = m.stock < 5 ? "stock-bajo" : "";
+    const stockClase = m.stock < stockMinimoGlobal ? "stock-bajo" : "";
     return `
       <div class="autocomplete-item" onclick="seleccionarMedicamento(${m.id})">
         <span>
@@ -393,7 +424,7 @@ function mostrarAutocomplete(lista) {
           <span style="color:var(--gris-texto)"> - ${escaparHTML(m.presentacion)}</span>
         </span>
         <span class="stock-info ${stockClase}">
-          ${m.stock < 5 ? "⚠ " : ""}${m.stock} en stock
+          ${m.stock < stockMinimoGlobal ? "⚠ " : ""}${m.stock} en stock
         </span>
       </div>`;
   }).join("");
@@ -544,6 +575,9 @@ async function eliminarOrden(id) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await cargarConfiguracionOrdenes();
+  await cargarAreasOrdenes();
+
   // Cargamos el cache de medicamentos para el autocompletado
   try {
     todosLosMedicamentos = await apiGet(API_MEDICAMENTOS);

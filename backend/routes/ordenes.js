@@ -15,6 +15,17 @@ const express = require("express");
 const router  = express.Router();
 const db      = require("../database"); // Misma BD que usa medicamentos.js
 
+function obtenerAreasValidas() {
+  const areas = db.prepare(`
+    SELECT nombre
+    FROM areas
+    WHERE activo = 1
+    ORDER BY nombre ASC
+  `).all().map(a => a.nombre);
+
+  return areas.length ? areas : ["Hospitalización", "Quirófano"];
+}
+
 // ──────────────────────────────────────────────
 // POST /api/ordenes
 // Crea una nueva orden vacía (sin detalle todavía)
@@ -28,8 +39,8 @@ router.post("/", (req, res) => {
       return res.status(400).json({ error: "El área es obligatoria" });
     }
 
-    // Solo permitimos áreas conocidas
-    const areasValidas = ["Hospitalización", "Quirófano", "Emergencias", "Consulta Externa"];
+    // Solo permitimos areas activas configuradas.
+    const areasValidas = obtenerAreasValidas();
     if (!areasValidas.includes(area)) {
       return res.status(400).json({ error: "Área no válida" });
     }

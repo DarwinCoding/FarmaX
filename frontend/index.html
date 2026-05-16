@@ -26,6 +26,7 @@
       <a href="/ordenes.html"        class="nav-link">Ordenes</a>
       <a href="/reportes.html"       class="nav-link">Reportes</a>
       <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
       <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
     </div>
     <div class="nav-usuario">
@@ -50,17 +51,7 @@
         <div class="form-grupo">
           <label for="presentacion">Presentacion</label>
           <select id="presentacion" required>
-            <option value="" disabled selected>Seleccionar...</option>
-            <option value="Tabletas">Tabletas</option>
-            <option value="Capsulas">Capsulas</option>
-            <option value="Jarabe">Jarabe</option>
-            <option value="Suspension">Suspension</option>
-            <option value="Inyectable">Inyectable</option>
-            <option value="Crema">Crema</option>
-            <option value="Gotas">Gotas</option>
-            <option value="Parche">Parche</option>
-            <option value="Supositorios">Supositorios</option>
-            <option value="Otro">Otro</option>
+            <option value="" disabled selected>Cargando presentaciones...</option>
           </select>
         </div>
         <div class="form-grupo">
@@ -112,8 +103,8 @@
         </table>
       </div>
       <div class="leyenda-alertas">
-        <span class="leyenda-item rojo">Stock bajo (&lt;5 unidades)</span>
-        <span class="leyenda-item amarillo">Caduca en &lt;30 dias o ya caduco</span>
+        <span class="leyenda-item rojo" id="leyenda-stock-bajo">Stock bajo</span>
+        <span class="leyenda-item amarillo" id="leyenda-caducidad">Caduca pronto o ya caduco</span>
       </div>
     </section>
   </main>

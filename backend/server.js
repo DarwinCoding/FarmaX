@@ -80,6 +80,9 @@ app.use("/api/ordenes-especiales", requireAuth, (req, res, next) => {
 const dashboardRoutes = require("./routes/dashboard");
 app.use("/api/dashboard", requireAuth, dashboardRoutes);
 
+const configuracionRoutes = require("./routes/configuracion");
+app.use("/api/configuracion", requireAuth, configuracionRoutes);
+
 // ── Ruta raíz ──
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));

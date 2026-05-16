@@ -3,8 +3,8 @@
 // ============================================================
 // RUTAS:
 //   GET /api/reportes/inventario-general    → todos los medicamentos
-//   GET /api/reportes/stock-bajo            → stock < 5
-//   GET /api/reportes/proximos-caducar      → caducan en ≤30 días
+//   GET /api/reportes/stock-bajo            → stock bajo segun configuracion
+//   GET /api/reportes/proximos-caducar      → caducan segun configuracion
 //   GET /api/reportes/caducados             → ya caducaron
 //   GET /api/reportes/historial-ordenes     → todas las órdenes con detalle
 //   GET /api/reportes/consumo-por-area      → totales entregados por área
@@ -17,59 +17,80 @@ const express = require("express");
 const router  = express.Router();
 const db      = require("../database");
 
+const DEFAULTS = {
+  stock_minimo_global: 5,
+  dias_alerta_caducidad: 30
+};
+
+function leerNumeroConfig(clave) {
+  const fila = db.prepare("SELECT valor FROM configuracion WHERE clave = ?").get(clave);
+  const valor = Number(fila?.valor);
+  return Number.isFinite(valor) ? valor : DEFAULTS[clave];
+}
+
+function leerConfiguracionGeneral() {
+  return {
+    stock_minimo_global: leerNumeroConfig("stock_minimo_global"),
+    dias_alerta_caducidad: leerNumeroConfig("dias_alerta_caducidad")
+  };
+}
+
 // ── 1. Inventario general ──
 router.get("/inventario-general", (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT
         id, nombre, presentacion, stock, caducidad, lote, creado_en,
         CASE
           WHEN stock = 0 THEN 'Sin stock'
-          WHEN stock < 5 THEN 'Stock bajo'
+          WHEN stock < ? THEN 'Stock bajo'
           ELSE 'Normal'
         END AS estado_stock,
         CASE
           WHEN date(caducidad) < date('now') THEN 'Caducado'
-          WHEN julianday(caducidad) - julianday('now') <= 30 THEN 'Por caducar'
+          WHEN julianday(caducidad) - julianday('now') <= ? THEN 'Por caducar'
           ELSE 'Vigente'
         END AS estado_caducidad
       FROM medicamentos
       ORDER BY nombre ASC
-    `).all();
-    res.json(datos);
+    `).all(config.stock_minimo_global, config.dias_alerta_caducidad);
+    res.json({ datos, configuracion: config });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ── 2. Stock bajo (< 5 unidades) ──
+// ── 2. Stock bajo (segun configuracion) ──
 router.get("/stock-bajo", (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT id, nombre, presentacion, stock, lote, caducidad
       FROM medicamentos
-      WHERE stock < 5
+      WHERE stock < ?
       ORDER BY stock ASC
-    `).all();
-    res.json(datos);
+    `).all(config.stock_minimo_global);
+    res.json({ datos, configuracion: config });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ── 3. Próximos a caducar (≤ 30 días, sin caducados) ──
+// ── 3. Proximos a caducar (segun configuracion, sin caducados) ──
 router.get("/proximos-caducar", (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT
         id, nombre, presentacion, stock, caducidad, lote,
         CAST(julianday(caducidad) - julianday('now') AS INTEGER) AS dias_restantes
       FROM medicamentos
       WHERE date(caducidad) >= date('now')
-        AND julianday(caducidad) - julianday('now') <= 30
+        AND julianday(caducidad) - julianday('now') <= ?
       ORDER BY caducidad ASC
-    `).all();
-    res.json(datos);
+    `).all(config.dias_alerta_caducidad);
+    res.json({ datos, configuracion: config });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -238,12 +259,13 @@ function autoAncho(hoja) {
 // ── EXCEL 1: Inventario general ──────────────────────────────
 router.get("/excel/inventario-general", async (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT id, nombre, presentacion, stock, caducidad, lote, creado_en,
-        CASE WHEN stock = 0 THEN 'Sin stock' WHEN stock < 5 THEN 'Stock bajo' ELSE 'Normal' END AS estado_stock,
-        CASE WHEN date(caducidad) < date('now') THEN 'Caducado' WHEN julianday(caducidad) - julianday('now') <= 30 THEN 'Por caducar' ELSE 'Vigente' END AS estado_caducidad
+        CASE WHEN stock = 0 THEN 'Sin stock' WHEN stock < ? THEN 'Stock bajo' ELSE 'Normal' END AS estado_stock,
+        CASE WHEN date(caducidad) < date('now') THEN 'Caducado' WHEN julianday(caducidad) - julianday('now') <= ? THEN 'Por caducar' ELSE 'Vigente' END AS estado_caducidad
       FROM medicamentos ORDER BY nombre ASC
-    `).all();
+    `).all(config.stock_minimo_global, config.dias_alerta_caducidad);
 
     const wb = new ExcelJS.Workbook();
     const ws = wb.addWorksheet("Inventario General");
@@ -276,10 +298,11 @@ router.get("/excel/inventario-general", async (req, res) => {
 // ── EXCEL 2: Stock bajo ──────────────────────────────────────
 router.get("/excel/stock-bajo", async (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT id, nombre, presentacion, stock, lote, caducidad
-      FROM medicamentos WHERE stock < 5 ORDER BY stock ASC
-    `).all();
+      FROM medicamentos WHERE stock < ? ORDER BY stock ASC
+    `).all(config.stock_minimo_global);
 
     const wb = new ExcelJS.Workbook();
     const ws = wb.addWorksheet("Stock Bajo");
@@ -309,13 +332,14 @@ router.get("/excel/stock-bajo", async (req, res) => {
 // ── EXCEL 3: Medicamentos por caducar ───────────────────────
 router.get("/excel/proximos-caducar", async (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const datos = db.prepare(`
       SELECT id, nombre, presentacion, stock, caducidad, lote,
         CAST(julianday(caducidad) - julianday('now') AS INTEGER) AS dias_restantes
       FROM medicamentos
-      WHERE date(caducidad) >= date('now') AND julianday(caducidad) - julianday('now') <= 30
+      WHERE date(caducidad) >= date('now') AND julianday(caducidad) - julianday('now') <= ?
       ORDER BY caducidad ASC
-    `).all();
+    `).all(config.dias_alerta_caducidad);
 
     const wb = new ExcelJS.Workbook();
     const ws = wb.addWorksheet("Por Caducar");

@@ -53,6 +53,16 @@ function obtenerRolActual() {
 
 // Lista de medicamentos cargada una sola vez al inicio
 let listaMedicamentos = [];
+let stockMinimoGlobal = 5;
+
+async function cargarConfiguracion() {
+  try {
+    const config = await fetch("/api/configuracion/general").then(r => r.json());
+    stockMinimoGlobal = config.stock_minimo_global;
+  } catch (_) {
+    // Si falla la configuracion, se conserva el default local.
+  }
+}
 
 async function cargarMedicamentos() {
   try {
@@ -101,7 +111,7 @@ function buscarMedicamento(texto) {
     >
       <strong>${esc(m.nombre)}</strong>
       <span style="color:var(--gris-texto)"> - ${esc(m.presentacion)}</span>
-      <span style="float:right;color:${m.stock < 5 ? 'var(--rojo)' : 'var(--verde-oscuro)'};font-weight:700">
+      <span style="float:right;color:${m.stock < stockMinimoGlobal ? 'var(--rojo)' : 'var(--verde-oscuro)'};font-weight:700">
         Stock: ${m.stock}
       </span>
     </div>
@@ -268,6 +278,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Ponemos la fecha de hoy por defecto en el campo fecha
   const hoy = new Date().toISOString().split("T")[0];
   document.getElementById("oe-fecha").value = hoy;
+
+  await cargarConfiguracion();
 
   // Cargamos la lista de medicamentos para el autocompletado
   await cargarMedicamentos();

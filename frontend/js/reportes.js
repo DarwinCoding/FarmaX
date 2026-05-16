@@ -4,6 +4,31 @@
 
 const API = "/api/reportes";
 
+let configReportes = {
+  stock_minimo_global: 5,
+  dias_alerta_caducidad: 30
+};
+
+function normalizarRespuesta(payload) {
+  if (payload && Array.isArray(payload.datos)) {
+    if (payload.configuracion) {
+      configReportes = payload.configuracion;
+      actualizarEtiquetasConfigReportes();
+    }
+    return payload.datos;
+  }
+  return payload;
+}
+
+function textoDiasCaducidad() {
+  return `${configReportes.dias_alerta_caducidad} dias`;
+}
+
+function actualizarEtiquetasConfigReportes() {
+  const label = document.getElementById("res-por-caducar-label");
+  if (label) label.textContent = `Por caducar (${textoDiasCaducidad()})`;
+}
+
 // ── Utilidades ──
 function fmt(fecha) {
   if (!fecha) return "-";
@@ -57,7 +82,7 @@ async function cargarInventario() {
   const cont = document.getElementById("tabla-inventario-general");
   cont.innerHTML = "<p style='color:var(--gris-texto)'>Cargando…</p>";
   try {
-    const data = await fetch(API + "/inventario-general").then(r => r.json());
+    const data = normalizarRespuesta(await fetch(API + "/inventario-general").then(r => r.json()));
     if (data.length === 0) { cont.innerHTML = "<p style='color:var(--gris-texto);padding:1rem'>Sin datos</p>"; return; }
     cont.innerHTML = `
       <div style="overflow-x:auto">
@@ -98,7 +123,7 @@ async function cargarStockBajo() {
   const cont = document.getElementById("tabla-stock-bajo");
   cont.innerHTML = "<p style='color:var(--gris-texto)'>Cargando…</p>";
   try {
-    const data = await fetch(API + "/stock-bajo").then(r => r.json());
+    const data = normalizarRespuesta(await fetch(API + "/stock-bajo").then(r => r.json()));
     document.getElementById("res-stock-bajo").textContent = data.length;
     if (data.length === 0) { cont.innerHTML = `<p style="padding:2rem;text-align:center;color:var(--gris-texto)">✅ Todos los medicamentos tienen stock suficiente</p>`; return; }
     cont.innerHTML = `
@@ -134,9 +159,9 @@ async function cargarPorCaducar() {
   const cont = document.getElementById("tabla-por-caducar");
   cont.innerHTML = "<p style='color:var(--gris-texto)'>Cargando…</p>";
   try {
-    const data = await fetch(API + "/proximos-caducar").then(r => r.json());
+    const data = normalizarRespuesta(await fetch(API + "/proximos-caducar").then(r => r.json()));
     document.getElementById("res-por-caducar").textContent = data.length;
-    if (data.length === 0) { cont.innerHTML = `<p style="padding:2rem;text-align:center;color:var(--gris-texto)">✅ Ningún medicamento vence en los próximos 30 días</p>`; return; }
+    if (data.length === 0) { cont.innerHTML = `<p style="padding:2rem;text-align:center;color:var(--gris-texto)">✅ Ningun medicamento vence en los proximos ${textoDiasCaducidad()}</p>`; return; }
     cont.innerHTML = `
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.88rem">
         <thead style="background:var(--verde-oscuro);color:white">
@@ -353,13 +378,16 @@ function limpiarFiltroConsumo() {
 document.addEventListener("DOMContentLoaded", async () => {
   // Cargamos todos los datos para el resumen de tarjetas
   try {
-    const [inv, sb, pc, cad, hist] = await Promise.all([
+    const [invResp, sbResp, pcResp, cad, hist] = await Promise.all([
       fetch(API + "/inventario-general").then(r => r.json()),
       fetch(API + "/stock-bajo").then(r => r.json()),
       fetch(API + "/proximos-caducar").then(r => r.json()),
       fetch(API + "/caducados").then(r => r.json()),
       fetch(API + "/historial-ordenes").then(r => r.json())
     ]);
+    const inv = normalizarRespuesta(invResp);
+    const sb = normalizarRespuesta(sbResp);
+    const pc = normalizarRespuesta(pcResp);
     document.getElementById("res-total").textContent      = inv.length;
     document.getElementById("res-stock-bajo").textContent = sb.length;
     document.getElementById("res-por-caducar").textContent= pc.length;

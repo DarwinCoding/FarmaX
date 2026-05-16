@@ -3,24 +3,43 @@ const express = require("express");
 const router  = express.Router();
 const db      = require("../database");
 
+const DEFAULTS = {
+  stock_minimo_global: 5,
+  dias_alerta_caducidad: 30
+};
+
+function leerNumeroConfig(clave) {
+  const fila = db.prepare("SELECT valor FROM configuracion WHERE clave = ?").get(clave);
+  const valor = Number(fila?.valor);
+  return Number.isFinite(valor) ? valor : DEFAULTS[clave];
+}
+
+function leerConfiguracionGeneral() {
+  return {
+    stock_minimo_global: leerNumeroConfig("stock_minimo_global"),
+    dias_alerta_caducidad: leerNumeroConfig("dias_alerta_caducidad")
+  };
+}
+
 // GET /api/dashboard/resumen
 router.get("/resumen", (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const hoy      = new Date();
-    const en30dias = new Date(hoy);
-    en30dias.setDate(hoy.getDate() + 30);
+    const fechaAlerta = new Date(hoy);
+    fechaAlerta.setDate(hoy.getDate() + config.dias_alerta_caducidad);
 
     const fechaHoy   = hoy.toISOString().split("T")[0];
-    const fecha30    = en30dias.toISOString().split("T")[0];
+    const fechaLimite = fechaAlerta.toISOString().split("T")[0];
 
     const totalActivos     = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1").get().c;
-    const stockBajo        = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1 AND stock < 5").get().c;
-    const porCaducar       = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1 AND caducidad >= ? AND caducidad <= ?").get(fechaHoy, fecha30).c;
+    const stockBajo        = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1 AND stock < ?").get(config.stock_minimo_global).c;
+    const porCaducar       = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1 AND caducidad >= ? AND caducidad <= ?").get(fechaHoy, fechaLimite).c;
     const caducados        = db.prepare("SELECT COUNT(*) as c FROM medicamentos WHERE activo = 1 AND caducidad < ?").get(fechaHoy).c;
     const totalOrdenes     = db.prepare("SELECT COUNT(*) as c FROM ordenes").get().c;
     const totalEspeciales  = db.prepare("SELECT COUNT(*) as c FROM ordenes_especiales").get().c;
 
-    res.json({ totalActivos, stockBajo, porCaducar, caducados, totalOrdenes, totalEspeciales });
+    res.json({ totalActivos, stockBajo, porCaducar, caducados, totalOrdenes, totalEspeciales, configuracion: config });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -61,18 +80,19 @@ router.get("/ordenes-especiales-recientes", (req, res) => {
 // GET /api/dashboard/alertas
 router.get("/alertas", (req, res) => {
   try {
+    const config = leerConfiguracionGeneral();
     const hoy    = new Date();
-    const en30   = new Date(hoy);
-    en30.setDate(hoy.getDate() + 30);
+    const fechaAlerta = new Date(hoy);
+    fechaAlerta.setDate(hoy.getDate() + config.dias_alerta_caducidad);
     const fechaHoy = hoy.toISOString().split("T")[0];
-    const fecha30  = en30.toISOString().split("T")[0];
+    const fechaLimite = fechaAlerta.toISOString().split("T")[0];
 
     const stockBajo = db.prepare(`
       SELECT nombre, presentacion, stock
       FROM medicamentos
-      WHERE activo = 1 AND stock < 5
+      WHERE activo = 1 AND stock < ?
       ORDER BY stock ASC
-    `).all();
+    `).all(config.stock_minimo_global);
 
     const porCaducar = db.prepare(`
       SELECT nombre, presentacion, caducidad,
@@ -80,7 +100,7 @@ router.get("/alertas", (req, res) => {
       FROM medicamentos
       WHERE activo = 1 AND caducidad >= ? AND caducidad <= ?
       ORDER BY caducidad ASC
-    `).all(fechaHoy, fecha30);
+    `).all(fechaHoy, fechaLimite);
 
     const caducados = db.prepare(`
       SELECT nombre, presentacion, caducidad,
@@ -90,7 +110,7 @@ router.get("/alertas", (req, res) => {
       ORDER BY caducidad ASC
     `).all(fechaHoy);
 
-    res.json({ stockBajo, porCaducar, caducados });
+    res.json({ stockBajo, porCaducar, caducados, configuracion: config });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

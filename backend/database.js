@@ -103,6 +103,78 @@ db.exec(`
   )
 `);
 
+// Tabla simple de configuracion por clave/valor.
+// INSERT OR IGNORE conserva valores existentes y solo completa defaults faltantes.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS configuracion (
+    clave TEXT PRIMARY KEY,
+    valor TEXT NOT NULL
+  )
+`);
+
+db.prepare(`
+  INSERT OR IGNORE INTO configuracion (clave, valor)
+  VALUES (?, ?)
+`).run("stock_minimo_global", "5");
+
+db.prepare(`
+  INSERT OR IGNORE INTO configuracion (clave, valor)
+  VALUES (?, ?)
+`).run("dias_alerta_caducidad", "30");
+
+// Areas configurables para ordenes. Se conservan historicos usando activo=0.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS areas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    activo INTEGER NOT NULL DEFAULT 1
+  )
+`);
+
+const areasIniciales = ["Hospitalización", "Quirófano"];
+for (const nombre of areasIniciales) {
+  const existe = db.prepare(`
+    SELECT id FROM areas
+    WHERE lower(nombre) = lower(?)
+  `).get(nombre);
+
+  if (!existe) {
+    db.prepare("INSERT INTO areas (nombre, activo) VALUES (?, 1)").run(nombre);
+  }
+}
+
+// Presentaciones configurables para el formulario de inventario.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS presentaciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    activo INTEGER NOT NULL DEFAULT 1
+  )
+`);
+
+const presentacionesIniciales = [
+  "Tableta",
+  "Ampolla",
+  "Frasco",
+  "Caja",
+  "Unidad",
+  "Cápsula",
+  "Jarabe",
+  "Crema",
+  "Solución"
+];
+
+for (const nombre of presentacionesIniciales) {
+  const existe = db.prepare(`
+    SELECT id FROM presentaciones
+    WHERE lower(nombre) = lower(?)
+  `).get(nombre);
+
+  if (!existe) {
+    db.prepare("INSERT INTO presentaciones (nombre, activo) VALUES (?, 1)").run(nombre);
+  }
+}
+
 // ──────────────────────────────────────────────
 // CREAR USUARIO ADMIN INICIAL
 // Solo se crea si no existe ya un admin.
@@ -174,4 +246,3 @@ try {
 } catch (_) {
   // La columna ya existe en una ejecución anterior — no hacemos nada
 }
-

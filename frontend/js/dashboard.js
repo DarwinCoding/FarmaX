@@ -24,6 +24,11 @@ async function cargarResumen() {
     document.getElementById("d-caducados").textContent  = data.caducados;
     document.getElementById("d-ordenes").textContent    = data.totalOrdenes;
     document.getElementById("d-especiales").textContent = data.totalEspeciales;
+
+    const labelCaducar = document.getElementById("d-caducar-label");
+    if (labelCaducar && data.configuracion) {
+      labelCaducar.textContent = `Por caducar (${data.configuracion.dias_alerta_caducidad} dias)`;
+    }
   } catch (e) {
     console.error("Error resumen:", e);
   }
@@ -82,6 +87,7 @@ async function cargarAlertas() {
   const cont = document.getElementById("d-alertas");
   try {
     const data = await fetch(`${API}/alertas`).then(r => r.json());
+    const diasAlerta = data.configuracion?.dias_alerta_caducidad ?? 30;
     let html = "";
 
     if (data.caducados.length) {
@@ -102,7 +108,7 @@ async function cargarAlertas() {
 
     if (data.porCaducar.length) {
       html += `<div class="d-alerta-bloque d-alerta-amarillo">
-        <strong>Por caducar (${data.porCaducar.length})</strong>
+        <strong>Por caducar (${data.porCaducar.length}, ${diasAlerta} dias)</strong>
         <ul>${data.porCaducar.map(m =>
           `<li>${esc(m.nombre)} — caduca el ${fmt(m.caducidad)} (${m.dias_restantes} dias)</li>`
         ).join("")}</ul></div>`;

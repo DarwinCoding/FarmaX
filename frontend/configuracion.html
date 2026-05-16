@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Configuracion - FarmaX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <script src="/js/auth-guard.js"></script>
+</head>
+<body>
+
+  <header>
+    <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
+  </header>
+
+  <nav class="nav-principal">
+    <div class="nav-enlaces">
+      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
+      <a href="/"                    class="nav-link">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link activo">Configuracion</a>
+      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+    </div>
+    <div class="nav-usuario">
+      <span id="nav-username">...</span>
+      <span class="nav-badge-rol" id="nav-rol"></span>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="card">
+      <div class="card-cabecera">
+        <h2 class="card-titulo">Configuracion</h2>
+        <span id="configuracion-estado" class="campo-opcional">Cargando...</span>
+      </div>
+      <p class="card-descripcion">
+        Base preparada para futuras opciones del sistema.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 class="card-titulo">Configuraciones generales</h2>
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label for="stock-minimo-global">Stock minimo global</label>
+          <input type="number" id="stock-minimo-global" min="0" step="1" placeholder="5"/>
+        </div>
+        <div class="form-grupo">
+          <label for="dias-alerta-caducidad">Dias de alerta de caducidad</label>
+          <input type="number" id="dias-alerta-caducidad" min="0" step="1" placeholder="30"/>
+        </div>
+      </div>
+      <div class="form-acciones">
+        <button class="btn btn-primario" id="btn-guardar-configuracion">Guardar configuracion</button>
+      </div>
+      <p id="configuracion-mensaje" class="campo-ayuda"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-cabecera">
+        <h2 class="card-titulo">Areas del sistema</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label for="area-nombre">Nombre del area</label>
+          <input type="text" id="area-nombre" placeholder="Ej: Emergencias" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="form-acciones">
+        <button class="btn btn-primario" id="btn-guardar-area">Agregar area</button>
+        <button class="btn btn-secundario" id="btn-cancelar-area" style="display:none">Cancelar edicion</button>
+      </div>
+      <p id="areas-mensaje" class="campo-ayuda"></p>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-areas-body">
+            <tr><td colspan="2" class="sin-datos">Cargando areas...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-cabecera">
+        <h2 class="card-titulo">Presentaciones</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label for="presentacion-nombre">Nombre de la presentacion</label>
+          <input type="text" id="presentacion-nombre" placeholder="Ej: Tableta" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="form-acciones">
+        <button class="btn btn-primario" id="btn-guardar-presentacion">Agregar presentacion</button>
+        <button class="btn btn-secundario" id="btn-cancelar-presentacion" style="display:none">Cancelar edicion</button>
+      </div>
+      <p id="presentaciones-mensaje" class="campo-ayuda"></p>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Presentacion</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-presentaciones-body">
+            <tr><td colspan="2" class="sin-datos">Cargando presentaciones...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-cabecera">
+        <h2 class="card-titulo">Backup</h2>
+      </div>
+      <p class="card-descripcion">
+        Descarga una copia manual de la base de datos SQLite actual. Solo administradores.
+      </p>
+      <div class="form-acciones">
+        <button class="btn btn-primario" id="btn-descargar-backup">Descargar respaldo</button>
+      </div>
+      <p id="backup-mensaje" class="campo-ayuda"></p>
+    </div>
+  </main>
+
+  <footer>FarmaX v4.0 - Configuracion</footer>
+  <div id="toast-contenedor"></div>
+  <script src="/js/configuracion.js"></script>
+</body>
+</html>

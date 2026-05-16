@@ -32,10 +32,84 @@ let editandoId = null;
 // Filtro activo del inventario: "activos" | "archivados" | "todos"
 let filtroActual = "activos";
 
+let configuracionInventario = {
+  stock_minimo_global: 5,
+  dias_alerta_caducidad: 30
+};
+
+let presentacionesInventario = [];
+
+const PRESENTACIONES_RESPALDO = [
+  "Tableta",
+  "Ampolla",
+  "Frasco",
+  "Caja",
+  "Unidad",
+  "Cápsula",
+  "Jarabe",
+  "Crema",
+  "Solución"
+];
+
 // ──────────────────────────────────────────────
 // 2. FUNCIONES DE LA API
 // Todas usan fetch() para hablar con el backend
 // ──────────────────────────────────────────────
+
+async function cargarConfiguracionInventario() {
+  try {
+    const res = await fetch("/api/configuracion/general");
+    if (!res.ok) return;
+    configuracionInventario = await res.json();
+    actualizarTextosConfiguracion();
+  } catch (_) {
+    // Si falla, se conservan los defaults locales.
+  }
+}
+
+function actualizarTextosConfiguracion() {
+  const leyendaStock = document.getElementById("leyenda-stock-bajo");
+  if (leyendaStock) {
+    leyendaStock.textContent = `Stock bajo (<${configuracionInventario.stock_minimo_global} unidades)`;
+  }
+
+  const leyendaCaducidad = document.getElementById("leyenda-caducidad");
+  if (leyendaCaducidad) {
+    leyendaCaducidad.textContent = `Caduca en <${configuracionInventario.dias_alerta_caducidad} dias o ya caduco`;
+  }
+}
+
+async function cargarPresentacionesInventario() {
+  try {
+    const res = await fetch("/api/configuracion/presentaciones");
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "No se pudieron cargar las presentaciones");
+    presentacionesInventario = data.length ? data.map(p => p.nombre) : PRESENTACIONES_RESPALDO;
+  } catch (_) {
+    presentacionesInventario = PRESENTACIONES_RESPALDO;
+  }
+
+  pintarSelectPresentaciones();
+}
+
+function pintarSelectPresentaciones(valorSeleccionado = "") {
+  const select = document.getElementById("presentacion");
+  if (!select) return;
+
+  const opciones = [...presentacionesInventario];
+  if (valorSeleccionado && !opciones.includes(valorSeleccionado)) {
+    opciones.push(valorSeleccionado);
+  }
+
+  select.innerHTML = `
+    <option value="" disabled ${valorSeleccionado ? "" : "selected"}>Seleccionar...</option>
+    ${opciones.map(nombre => `
+      <option value="${escaparHTML(nombre)}" ${nombre === valorSeleccionado ? "selected" : ""}>
+        ${escaparHTML(nombre)}
+      </option>
+    `).join("")}
+  `;
+}
 
 /**
  * Carga todos los medicamentos desde el backend
@@ -183,8 +257,8 @@ function renderizarTabla(lista) {
   tbody.innerHTML = lista.map(med => {
     // Calculamos los días hasta que caduca
     const diasParaCaducar = calcularDias(med.caducidad);
-    const stockBajo       = med.stock < 5;
-    const porCaducar      = diasParaCaducar >= 0 && diasParaCaducar <= 30;
+    const stockBajo       = med.stock < configuracionInventario.stock_minimo_global;
+    const porCaducar      = diasParaCaducar >= 0 && diasParaCaducar <= configuracionInventario.dias_alerta_caducidad;
     const caducado        = diasParaCaducar < 0;
 
     // Clases CSS según el estado del medicamento
@@ -259,10 +333,10 @@ function actualizarAlertas(lista) {
   const banner = document.getElementById("banner-alertas");
 
   // Separamos los medicamentos según su problema
-  const stockBajo   = lista.filter(m => m.stock < 5);
+  const stockBajo   = lista.filter(m => m.stock < configuracionInventario.stock_minimo_global);
   const porCaducar  = lista.filter(m => {
     const dias = calcularDias(m.caducidad);
-    return dias >= 0 && dias <= 30;
+    return dias >= 0 && dias <= configuracionInventario.dias_alerta_caducidad;
   });
   const caducados   = lista.filter(m => calcularDias(m.caducidad) < 0);
 
@@ -282,7 +356,7 @@ function actualizarAlertas(lista) {
   if (stockBajo.length > 0) {
     html += `
       <div class="alerta-seccion rojo">
-        <div class="alerta-titulo rojo">🚨 Stock bajo (menos de 5 unidades)</div>
+        <div class="alerta-titulo rojo">🚨 Stock bajo (menos de ${configuracionInventario.stock_minimo_global} unidades)</div>
         <ul class="alerta-lista">
           ${stockBajo.map(m => `<li><strong>${m.nombre}</strong> - ${m.stock} unidades</li>`).join("")}
         </ul>
@@ -369,7 +443,7 @@ function abrirEdicion(id) {
 
   // Llenamos el formulario con los datos del medicamento
   document.getElementById("nombre").value       = med.nombre;
-  document.getElementById("presentacion").value = med.presentacion;
+  pintarSelectPresentaciones(med.presentacion);
   document.getElementById("stock").value        = med.stock;
   document.getElementById("caducidad").value    = med.caducidad;
   document.getElementById("lote").value         = med.lote;
@@ -389,6 +463,7 @@ function abrirEdicion(id) {
 function cancelarEdicion() {
   editandoId = null;
   limpiarFormulario();
+  pintarSelectPresentaciones();
   document.getElementById("form-titulo").textContent   = "➕ Agregar Medicamento";
   document.getElementById("btn-guardar").textContent   = "💊 Guardar Medicamento";
   document.getElementById("btn-cancelar").style.display = "none";
@@ -556,7 +631,10 @@ function escaparHTML(texto) {
 // Se ejecuta cuando la página termina de cargar
 // ──────────────────────────────────────────────
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await cargarConfiguracionInventario();
+  await cargarPresentacionesInventario();
+
   // Cargamos los medicamentos al iniciar
   cargarMedicamentos();
 
