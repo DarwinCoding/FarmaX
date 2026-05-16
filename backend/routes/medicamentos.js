@@ -22,12 +22,21 @@ const db = require("../database");     // Importamos la conexión a la base de d
 // ──────────────────────────────────────────────
 router.get("/", (req, res) => {
   try {
-    // .prepare() crea una consulta SQL lista para ejecutar
-    const stmt = db.prepare("SELECT * FROM medicamentos ORDER BY nombre ASC");
-    const medicamentos = stmt.all(); // .all() devuelve un array con todos los resultados
-    res.json(medicamentos);          // Enviamos la respuesta en formato JSON
+    // filtro: "activos" (default) | "archivados" | "todos"
+    const filtro = req.query.filtro || "activos";
+
+    let sql;
+    if (filtro === "archivados") {
+      sql = "SELECT * FROM medicamentos WHERE activo = 0 ORDER BY nombre ASC";
+    } else if (filtro === "todos") {
+      sql = "SELECT * FROM medicamentos ORDER BY nombre ASC";
+    } else {
+      sql = "SELECT * FROM medicamentos WHERE activo = 1 ORDER BY nombre ASC";
+    }
+
+    const medicamentos = db.prepare(sql).all();
+    res.json(medicamentos);
   } catch (err) {
-    // Si algo falla, enviamos un error 500 (error de servidor)
     res.status(500).json({ error: "Error al obtener medicamentos: " + err.message });
   }
 });
@@ -132,25 +141,45 @@ router.put("/:id", (req, res) => {
 });
 
 // ──────────────────────────────────────────────
-// DELETE /api/medicamentos/:id
-// Elimina un medicamento por su ID
+// DELETE /api/medicamentos/:id  →  Archivar (soft delete)
+// NO borra el registro fisicamente. Pone activo=0.
+// Preserva historial y evita FOREIGN KEY constraint failed.
 // ──────────────────────────────────────────────
 router.delete("/:id", (req, res) => {
   try {
     const { id } = req.params;
 
-    // Verificamos que exista antes de eliminar
     const existe = db.prepare("SELECT id FROM medicamentos WHERE id = ?").get(id);
     if (!existe) {
       return res.status(404).json({ error: "Medicamento no encontrado" });
     }
 
-    const stmt = db.prepare("DELETE FROM medicamentos WHERE id = ?");
-    stmt.run(id);
+    db.prepare("UPDATE medicamentos SET activo = 0 WHERE id = ?").run(id);
 
-    res.json({ message: "Medicamento eliminado exitosamente" });
+    res.json({ message: "Medicamento archivado correctamente" });
   } catch (err) {
-    res.status(500).json({ error: "Error al eliminar medicamento: " + err.message });
+    res.status(500).json({ error: "Error al archivar medicamento: " + err.message });
+  }
+});
+
+// ──────────────────────────────────────────────
+// PATCH /api/medicamentos/:id/restaurar
+// Reactiva un medicamento archivado (activo=1)
+// ──────────────────────────────────────────────
+router.patch("/:id/restaurar", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existe = db.prepare("SELECT id FROM medicamentos WHERE id = ?").get(id);
+    if (!existe) {
+      return res.status(404).json({ error: "Medicamento no encontrado" });
+    }
+
+    db.prepare("UPDATE medicamentos SET activo = 1 WHERE id = ?").run(id);
+
+    res.json({ message: "Medicamento restaurado al inventario activo" });
+  } catch (err) {
+    res.status(500).json({ error: "Error al restaurar medicamento: " + err.message });
   }
 });
 

@@ -29,6 +29,9 @@ let medicamentos = [];
 // ID del medicamento que estamos editando (null = modo "agregar")
 let editandoId = null;
 
+// Filtro activo del inventario: "activos" | "archivados" | "todos"
+let filtroActual = "activos";
+
 // ──────────────────────────────────────────────
 // 2. FUNCIONES DE LA API
 // Todas usan fetch() para hablar con el backend
@@ -40,19 +43,41 @@ let editandoId = null;
  */
 async function cargarMedicamentos() {
   try {
-    const respuesta = await fetch(API_URL);
+    const respuesta = await fetch(`${API_URL}?filtro=${filtroActual}`);
 
     if (!respuesta.ok) {
       throw new Error("Error al conectar con el servidor");
     }
 
-    medicamentos = await respuesta.json(); // Convertimos la respuesta a array JS
-    renderizarTabla(medicamentos);          // Dibujamos la tabla
-    actualizarAlertas(medicamentos);        // Revisamos alertas
+    medicamentos = await respuesta.json();
+    renderizarTabla(medicamentos);
+    // Solo mostramos alertas en vista de activos
+    if (filtroActual === "activos") {
+      actualizarAlertas(medicamentos);
+    } else {
+      const banner = document.getElementById("banner-alertas");
+      banner.classList.remove("visible");
+      banner.innerHTML = "";
+    }
   } catch (err) {
     mostrarToast("❌ No se pudo conectar con el servidor", "error");
     console.error(err);
   }
+}
+
+/**
+ * Cambia el filtro de inventario y recarga la tabla
+ * @param {string} nuevoFiltro - "activos" | "archivados" | "todos"
+ */
+function cambiarFiltro(nuevoFiltro) {
+  filtroActual = nuevoFiltro;
+
+  // Actualizamos estilo visual de los botones de filtro
+  document.querySelectorAll(".btn-filtro").forEach(btn => {
+    btn.classList.toggle("activo", btn.dataset.filtro === nuevoFiltro);
+  });
+
+  cargarMedicamentos();
 }
 
 /**
@@ -95,8 +120,8 @@ async function actualizarMedicamento(id, datos) {
 }
 
 /**
- * Elimina un medicamento del backend (DELETE)
- * @param {number} id - ID del medicamento a eliminar
+ * Archiva un medicamento (soft delete — pone activo=0)
+ * @param {number} id - ID del medicamento a archivar
  */
 async function eliminarMedicamento(id) {
   const respuesta = await fetch(`${API_URL}/${id}`, {
@@ -105,7 +130,24 @@ async function eliminarMedicamento(id) {
 
   if (!respuesta.ok) {
     const error = await respuesta.json();
-    throw new Error(error.error || "Error al eliminar");
+    throw new Error(error.error || "Error al archivar");
+  }
+
+  return await respuesta.json();
+}
+
+/**
+ * Restaura un medicamento archivado (pone activo=1)
+ * @param {number} id - ID del medicamento a restaurar
+ */
+async function restaurarMedicamento(id) {
+  const respuesta = await fetch(`${API_URL}/${id}/restaurar`, {
+    method: "PATCH"
+  });
+
+  if (!respuesta.ok) {
+    const error = await respuesta.json();
+    throw new Error(error.error || "Error al restaurar");
   }
 
   return await respuesta.json();
@@ -169,6 +211,25 @@ function renderizarTabla(lista) {
     // Formateamos la fecha para mostrarla más legible
     const fechaFormateada = formatearFecha(med.caducidad);
 
+    // Botones de acción según el estado del medicamento
+    let botonesAccion = "";
+    if (med.activo === 0) {
+      // Medicamento archivado: solo mostrar Restaurar
+      botonesAccion = `
+        <button class="btn btn-restaurar" onclick="confirmarRestaurar(${med.id}, '${escaparHTML(med.nombre)}')">
+          ♻ Restaurar
+        </button>`;
+    } else {
+      // Medicamento activo: Editar + Archivar
+      botonesAccion = `
+        <button class="btn btn-editar" onclick="abrirEdicion(${med.id})">
+          ✏ Editar
+        </button>
+        <button class="btn btn-archivar" onclick="confirmarEliminar(${med.id}, '${escaparHTML(med.nombre)}')">
+          📦 Archivar
+        </button>`;
+    }
+
     return `
       <tr class="${clasesFila}" data-id="${med.id}">
         <td><strong>${escaparHTML(med.nombre)}</strong></td>
@@ -180,15 +241,10 @@ function renderizarTabla(lista) {
         <td>${fechaFormateada} ${badge}</td>
         <td>${escaparHTML(med.lote)}</td>
         <td class="acciones">
-          <button class="btn btn-editar" onclick="abrirEdicion(${med.id})">
-            ✏ Editar
-          </button>
-          <button class="btn btn-eliminar" onclick="confirmarEliminar(${med.id}, '${escaparHTML(med.nombre)}')">
-            🗑 Eliminar
-          </button>
+          ${botonesAccion}
         </td>
       </tr>`;
-  }).join(""); // Unimos todas las filas en un solo string HTML
+  }).join("");
 }
 
 // ──────────────────────────────────────────────
@@ -349,28 +405,47 @@ function limpiarFormulario() {
 // 6. MODAL DE CONFIRMACIÓN PARA ELIMINAR
 // ──────────────────────────────────────────────
 
-let idParaEliminar = null; // Guardamos el ID hasta que confirmen
+let idParaEliminar = null;   // ID para archivar
+let idParaRestaurar = null; // ID para restaurar
 
 /**
- * Muestra el modal preguntando si quiere eliminar
- * @param {number} id     - ID del medicamento
- * @param {string} nombre - Nombre para mostrarlo en el mensaje
+ * Muestra el modal de confirmación para ARCHIVAR un medicamento
  */
 function confirmarEliminar(id, nombre) {
   idParaEliminar = id;
+  idParaRestaurar = null;
   document.getElementById("modal-nombre").textContent = nombre;
+  document.getElementById("modal-mensaje").textContent =
+    "Este medicamento dejará de aparecer en el inventario activo, pero seguirá existiendo para mantener el historial y reportes. ¿Deseas continuar?";
+  document.getElementById("btn-modal-si").textContent = "📦 Sí, archivar";
   document.getElementById("modal-overlay").classList.add("visible");
 }
 
 /**
- * El usuario confirmó: eliminamos el medicamento
+ * Muestra el modal de confirmación para RESTAURAR un medicamento
+ */
+function confirmarRestaurar(id, nombre) {
+  idParaRestaurar = id;
+  idParaEliminar = null;
+  document.getElementById("modal-nombre").textContent = nombre;
+  document.getElementById("modal-mensaje").textContent =
+    "Este medicamento volverá a aparecer en el inventario activo. ¿Deseas continuar?";
+  document.getElementById("btn-modal-si").textContent = "♻ Sí, restaurar";
+  document.getElementById("modal-overlay").classList.add("visible");
+}
+
+/**
+ * El usuario confirmó la acción del modal
  */
 async function confirmarEliminarSi() {
-  if (idParaEliminar === null) return;
-
   try {
-    await eliminarMedicamento(idParaEliminar);
-    mostrarToast("🗑 Medicamento eliminado");
+    if (idParaEliminar !== null) {
+      await eliminarMedicamento(idParaEliminar);
+      mostrarToast("📦 Medicamento archivado");
+    } else if (idParaRestaurar !== null) {
+      await restaurarMedicamento(idParaRestaurar);
+      mostrarToast("✅ Medicamento restaurado al inventario");
+    }
     await cargarMedicamentos();
   } catch (err) {
     mostrarToast("❌ " + err.message, "error");
@@ -384,6 +459,7 @@ async function confirmarEliminarSi() {
  */
 function cerrarModal() {
   idParaEliminar = null;
+  idParaRestaurar = null;
   document.getElementById("modal-overlay").classList.remove("visible");
 }
 

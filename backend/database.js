@@ -158,3 +158,20 @@ try {
   // El índice ya existe — no hacemos nada
 }
 
+// ──────────────────────────────────────────────
+// MIGRACIÓN: columna "activo" en medicamentos
+// Permite archivar medicamentos sin borrarlos físicamente,
+// evitando errores FOREIGN KEY y preservando el historial.
+// Se usa try/catch para que sea idempotente: si la columna
+// ya existe, SQLite lanza un error que ignoramos.
+// ──────────────────────────────────────────────
+try {
+  db.exec(`
+    ALTER TABLE medicamentos
+    ADD COLUMN activo INTEGER NOT NULL DEFAULT 1
+  `);
+  console.log("✅ Columna 'activo' agregada a medicamentos");
+} catch (_) {
+  // La columna ya existe en una ejecución anterior — no hacemos nada
+}
+

@@ -42,7 +42,7 @@
   <script>
     // Si ya hay sesion activa, ir directo al inventario
     fetch("/api/auth/me").then(r => {
-      if (r.ok) window.location.href = "/";
+      if (r.ok) window.location.href = "/dashboard.html";
     }).catch(() => {});
 
     const btnLogin = document.getElementById("btn-login");
@@ -70,7 +70,7 @@
         });
 
         if (res.ok) {
-          window.location.href = "/";
+          window.location.href = "/dashboard.html";
         } else {
           const data = await res.json();
           errorDiv.textContent = data.error || "Error al iniciar sesion";

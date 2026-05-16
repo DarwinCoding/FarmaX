@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — FarmaX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <script src="/js/auth-guard.js"></script>
+</head>
+<body>
+
+  <header>
+    <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
+  </header>
+
+  <nav class="nav-principal">
+    <div class="nav-enlaces">
+      <a href="/dashboard.html"      class="nav-link activo">Dashboard</a>
+      <a href="/"                    class="nav-link">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
+      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+    </div>
+    <div class="nav-usuario">
+      <span id="nav-username">…</span>
+      <span class="nav-badge-rol" id="nav-rol"></span>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- TARJETAS DE RESUMEN -->
+    <div class="d-grid-resumen">
+      <div class="d-card">
+        <div class="d-numero" id="d-activos">—</div>
+        <div class="d-etiqueta">Medicamentos activos</div>
+      </div>
+      <div class="d-card d-card-alerta">
+        <div class="d-numero" id="d-stock">—</div>
+        <div class="d-etiqueta">Stock bajo</div>
+      </div>
+      <div class="d-card d-card-warn">
+        <div class="d-numero" id="d-caducar">—</div>
+        <div class="d-etiqueta">Por caducar (30 dias)</div>
+      </div>
+      <div class="d-card d-card-alerta">
+        <div class="d-numero" id="d-caducados">—</div>
+        <div class="d-etiqueta">Caducados</div>
+      </div>
+      <div class="d-card">
+        <div class="d-numero" id="d-ordenes">—</div>
+        <div class="d-etiqueta">Ordenes totales</div>
+      </div>
+      <div class="d-card">
+        <div class="d-numero" id="d-especiales">—</div>
+        <div class="d-etiqueta">Ordenes especiales</div>
+      </div>
+    </div>
+
+    <!-- ACCESOS RÁPIDOS -->
+    <div class="card">
+      <h2 class="card-titulo">Accesos rapidos</h2>
+      <div class="d-accesos">
+        <a href="/"                    class="d-acceso-btn">Inventario</a>
+        <a href="/ordenes.html"        class="d-acceso-btn">Nueva Orden</a>
+        <a href="/reportes.html"       class="d-acceso-btn">Reportes</a>
+        <a href="/orden-especial.html" class="d-acceso-btn">Orden Especial</a>
+      </div>
+    </div>
+
+    <!-- FILA: últimas órdenes + órdenes especiales -->
+    <div class="d-fila-dos">
+      <div class="card">
+        <h2 class="card-titulo">Ultimas ordenes</h2>
+        <div id="d-ultimas-ordenes"><p class="d-empty">Cargando...</p></div>
+      </div>
+      <div class="card">
+        <h2 class="card-titulo">Ordenes especiales recientes</h2>
+        <div id="d-especiales-recientes"><p class="d-empty">Cargando...</p></div>
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div class="card">
+      <h2 class="card-titulo">Alertas</h2>
+      <div id="d-alertas"><p class="d-empty">Cargando...</p></div>
+    </div>
+
+  </main>
+
+  <footer>FarmaX v4.0 — Dashboard</footer>
+  <div id="toast-contenedor"></div>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

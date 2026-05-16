@@ -76,6 +76,10 @@ app.use("/api/ordenes-especiales", requireAuth, (req, res, next) => {
   // GET y POST pasan sin restricción de rol
   next();
 }, ordenesEspecialesRoutes);
+// ── Dashboard ──
+const dashboardRoutes = require("./routes/dashboard");
+app.use("/api/dashboard", requireAuth, dashboardRoutes);
+
 // ── Ruta raíz ──
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));

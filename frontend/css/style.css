@@ -274,6 +274,48 @@ main {
 }
 .btn-eliminar:hover { background: var(--rojo); color: white; }
 
+/* ── Botón Archivar (ámbar neutro — reemplaza a btn-eliminar) ── */
+.btn-archivar {
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #fcd34d;
+}
+.btn-archivar:hover { background: #f59e0b; color: white; }
+
+/* ── Botón Restaurar (verde suave) ── */
+.btn-restaurar {
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #6ee7b7;
+}
+.btn-restaurar:hover { background: #10b981; color: white; }
+
+/* ── Filtros de inventario (Activos / Archivados / Todos) ── */
+.filtros-inventario {
+  display: flex;
+  gap: 0.4rem;
+}
+.btn-filtro {
+  background: var(--gris-fondo);
+  color: var(--texto-secundario);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--gris-borde);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-filtro:hover { background: var(--gris-borde); }
+.btn-filtro.activo {
+  background: var(--primario);
+  color: white;
+  border-color: var(--primario);
+}
+
 /* ══════════════════════════════════════
    BARRA DE BÚSQUEDA Y CONTADOR
 ══════════════════════════════════════ */

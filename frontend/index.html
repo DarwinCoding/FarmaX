@@ -21,6 +21,7 @@
   <!-- NAVBAR UNIFICADO: mismo en todas las páginas -->
   <nav class="nav-principal">
     <div class="nav-enlaces">
+      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
       <a href="/"                    class="nav-link activo">Inventario</a>
       <a href="/ordenes.html"        class="nav-link">Ordenes</a>
       <a href="/reportes.html"       class="nav-link">Reportes</a>
@@ -86,6 +87,11 @@
       <h2 class="card-titulo">Inventario de Medicamentos</h2>
       <div class="tabla-controles">
         <input type="search" id="buscador" placeholder="Buscar por nombre, presentacion o lote..." autocomplete="off" />
+        <div class="filtros-inventario">
+          <button class="btn btn-filtro activo" data-filtro="activos" onclick="cambiarFiltro('activos')">Activos</button>
+          <button class="btn btn-filtro" data-filtro="archivados" onclick="cambiarFiltro('archivados')">Archivados</button>
+          <button class="btn btn-filtro" data-filtro="todos" onclick="cambiarFiltro('todos')">Todos</button>
+        </div>
         <span id="contador-resultados">0 medicamentos</span>
       </div>
       <div class="tabla-contenedor">
@@ -118,10 +124,10 @@
   <div id="modal-overlay">
     <div class="modal">
       <div class="modal-icono">!</div>
-      <h3>Eliminar medicamento?</h3>
-      <p>Estas a punto de eliminar <strong id="modal-nombre"></strong>. Esta accion no se puede deshacer.</p>
+      <h3><strong id="modal-nombre"></strong></h3>
+      <p id="modal-mensaje">Este medicamento dejara de aparecer en el inventario activo, pero seguira existiendo para mantener el historial y reportes. Deseas continuar?</p>
       <div class="modal-botones">
-        <button id="btn-modal-si" class="btn btn-eliminar">Si, eliminar</button>
+        <button id="btn-modal-si" class="btn btn-archivar">Confirmar</button>
         <button id="btn-modal-no" class="btn btn-secundario">Cancelar</button>
       </div>
     </div>
