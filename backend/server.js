@@ -32,7 +32,7 @@ function requireAuth(req, res, next) {
   next();
 }
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../frontend"), { index: false }));
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
@@ -62,7 +62,7 @@ const auditoriaRoutes = require("./routes/auditoria");
 app.use("/api/auditoria", requireAuth, auditoriaRoutes);
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dashboard.html"));
 });
 
 app.use((req, res) => {
