@@ -9,6 +9,7 @@ const SQLiteStore = require("connect-sqlite3")(session);
 
 const app = express();
 const PORT = 3000;
+const DB_PATH = path.join(__dirname, "data", "farmacia.db");
 
 app.use(express.json());
 
@@ -69,6 +70,24 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor FarmaX en http://localhost:${PORT}`);
-  console.log("Usuario inicial: admin / admin123");
+  console.log("");
+  console.log("╔══════════════════════════════════════════════════════╗");
+  console.log("║                    FARMAX v4.0                       ║");
+  console.log("║      Sistema de Gestion Farmaceutica Clinica         ║");
+  console.log("╠══════════════════════════════════════════════════════╣");
+  console.log("║ Dashboard       │ Usuarios y permisos                ║");
+  console.log("║ Inventario      │ Ordenes especiales                 ║");
+  console.log("║ Reportes        │ Auditoria                          ║");
+  console.log("║ Configuracion   │ Backup y alertas                   ║");
+  console.log("╚══════════════════════════════════════════════════════╝");
+  console.log("");
+  console.log("Base de datos:");
+  console.log(DB_PATH);
+  console.log("");
+  console.log("Servidor:");
+  console.log(`http://localhost:${PORT}`);
+  console.log("");
+  console.log("Usuario inicial:");
+  console.log("admin");
+  console.log("");
 });
