@@ -14,13 +14,15 @@
 
 const express = require("express");
 const router = express.Router();       // Router es como un mini-servidor para este grupo de rutas
+const { requirePermiso } = require("../middleware/permisos");
 const db = require("../database");     // Importamos la conexión a la base de datos
+const { registrarAuditoria } = require("../auditoria");
 
 // ──────────────────────────────────────────────
 // GET /api/medicamentos
 // Devuelve TODOS los medicamentos ordenados por nombre
 // ──────────────────────────────────────────────
-router.get("/", (req, res) => {
+router.get("/", requirePermiso("ver_inventario"), (req, res) => {
   try {
     // filtro: "activos" (default) | "archivados" | "todos"
     const filtro = req.query.filtro || "activos";
@@ -45,7 +47,7 @@ router.get("/", (req, res) => {
 // GET /api/medicamentos/:id
 // Devuelve UN medicamento por su ID
 // ──────────────────────────────────────────────
-router.get("/:id", (req, res) => {
+router.get("/:id", requirePermiso("ver_inventario"), (req, res) => {
   try {
     const { id } = req.params; // Extraemos el ID de la URL (ej: /api/medicamentos/3)
     const stmt = db.prepare("SELECT * FROM medicamentos WHERE id = ?");
@@ -67,7 +69,7 @@ router.get("/:id", (req, res) => {
 // Crea un NUEVO medicamento
 // El frontend envía los datos en el cuerpo (body) de la petición
 // ──────────────────────────────────────────────
-router.post("/", (req, res) => {
+router.post("/", requirePermiso("crear_medicamento"), (req, res) => {
   try {
     // Extraemos los campos que llegaron en el body del request
     const { nombre, presentacion, stock, caducidad, lote } = req.body;
@@ -90,6 +92,7 @@ router.post("/", (req, res) => {
     `);
 
     const result = stmt.run(nombre.trim(), presentacion.trim(), Number(stock), caducidad, lote.trim());
+    registrarAuditoria(req, "CREAR", "Inventario", `Creo medicamento: ${nombre.trim()}`);
 
     // Respondemos con el ID del nuevo registro y código 201 (Created)
     res.status(201).json({
@@ -105,7 +108,7 @@ router.post("/", (req, res) => {
 // PUT /api/medicamentos/:id
 // Actualiza un medicamento EXISTENTE por su ID
 // ──────────────────────────────────────────────
-router.put("/:id", (req, res) => {
+router.put("/:id", requirePermiso("editar_medicamento"), (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, presentacion, stock, caducidad, lote } = req.body;
@@ -133,6 +136,7 @@ router.put("/:id", (req, res) => {
     `);
 
     stmt.run(nombre.trim(), presentacion.trim(), Number(stock), caducidad, lote.trim(), id);
+    registrarAuditoria(req, "EDITAR", "Inventario", `Edito medicamento: ${nombre.trim()}`);
 
     res.json({ message: "Medicamento actualizado exitosamente" });
   } catch (err) {
@@ -145,7 +149,7 @@ router.put("/:id", (req, res) => {
 // NO borra el registro fisicamente. Pone activo=0.
 // Preserva historial y evita FOREIGN KEY constraint failed.
 // ──────────────────────────────────────────────
-router.delete("/:id", (req, res) => {
+router.delete("/:id", requirePermiso("desactivar_medicamento"), (req, res) => {
   try {
     const { id } = req.params;
 
@@ -155,6 +159,7 @@ router.delete("/:id", (req, res) => {
     }
 
     db.prepare("UPDATE medicamentos SET activo = 0 WHERE id = ?").run(id);
+    registrarAuditoria(req, "ARCHIVAR", "Inventario", `Archivo medicamento #${id}`);
 
     res.json({ message: "Medicamento archivado correctamente" });
   } catch (err) {
@@ -166,7 +171,7 @@ router.delete("/:id", (req, res) => {
 // PATCH /api/medicamentos/:id/restaurar
 // Reactiva un medicamento archivado (activo=1)
 // ──────────────────────────────────────────────
-router.patch("/:id/restaurar", (req, res) => {
+router.patch("/:id/restaurar", requirePermiso("desactivar_medicamento"), (req, res) => {
   try {
     const { id } = req.params;
 
@@ -176,6 +181,7 @@ router.patch("/:id/restaurar", (req, res) => {
     }
 
     db.prepare("UPDATE medicamentos SET activo = 1 WHERE id = ?").run(id);
+    registrarAuditoria(req, "RESTAURAR", "Inventario", `Restauro medicamento #${id}`);
 
     res.json({ message: "Medicamento restaurado al inventario activo" });
   } catch (err) {

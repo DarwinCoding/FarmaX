@@ -123,7 +123,7 @@ async function cargarListaOrdenes() {
 
       // Botón eliminar: solo en órdenes NO completadas
       const btnEliminar = o.estado !== "completada"
-        ? `<button class="btn btn-eliminar" onclick="eliminarOrden(${o.id})">
+        ? `<button class="btn btn-eliminar" data-permiso="eliminar_ordenes" onclick="eliminarOrden(${o.id})">
              Eliminar
            </button>`
         : "";
@@ -148,6 +148,7 @@ async function cargarListaOrdenes() {
           </div>
         </div>`;
     }).join("");
+    if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
 
   } catch (err) {
     contenedor.innerHTML = `<div class="sin-ordenes">❌ Error: ${err.message}</div>`;
@@ -262,7 +263,7 @@ function renderizarCarrito() {
             </span>
           </td>
           <td>
-            ${esPendiente
+            ${esPendiente && (!window.tienePermiso || window.tienePermiso("crear_ordenes"))
               ? `<button class="btn btn-eliminar" onclick="eliminarLineaCarrito(${linea.id})">🗑</button>`
               : "-"
             }
@@ -276,6 +277,7 @@ function renderizarCarrito() {
   const totalEntregado  = ordenActiva.detalle.reduce((s, l) => s + l.cantidad_entregada, 0);
   document.getElementById("total-solicitado").textContent = totalSolicitado;
   document.getElementById("total-entregado").textContent  = totalEntregado;
+  if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
 }
 
 /**

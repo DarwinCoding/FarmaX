@@ -11,6 +11,16 @@ const express  = require("express");
 const router   = express.Router();
 const bcrypt   = require("bcryptjs");  // Para verificar la contraseña encriptada
 const db       = require("../database");
+const { obtenerPermisosUsuario } = require("../permisos");
+const { registrarAuditoria } = require("../auditoria");
+
+function usuarioConPermisos(usuario) {
+  return {
+    ...usuario,
+    usuario: usuario.username,
+    permisos: obtenerPermisosUsuario(usuario)
+  };
+}
 
 // ──────────────────────────────────────────────
 // POST /api/auth/login
@@ -46,9 +56,11 @@ router.post("/login", (req, res) => {
     rol:      usuario.rol
   };
 
+  registrarAuditoria(req, "LOGIN", "Login", "Inicio de sesion");
+
   res.json({
     message:  "Sesión iniciada correctamente",
-    usuario:  req.session.usuario
+    usuario:  usuarioConPermisos(req.session.usuario)
   });
 });
 
@@ -57,6 +69,7 @@ router.post("/login", (req, res) => {
 // Destruye la sesión del servidor
 // ──────────────────────────────────────────────
 router.post("/logout", (req, res) => {
+  registrarAuditoria(req, "LOGOUT", "Login", "Cierre de sesion");
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
     res.clearCookie("connect.sid"); // Borramos la cookie del navegador
@@ -75,7 +88,7 @@ router.get("/me", (req, res) => {
   }
   res.json({
     autenticado: true,
-    usuario: req.session.usuario
+    usuario: usuarioConPermisos(req.session.usuario)
   });
 });
 

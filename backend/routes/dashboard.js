@@ -2,6 +2,9 @@
 const express = require("express");
 const router  = express.Router();
 const db      = require("../database");
+const { requirePermiso } = require("../middleware/permisos");
+
+router.use(requirePermiso("ver_dashboard"));
 
 const DEFAULTS = {
   stock_minimo_global: 5,
@@ -111,6 +114,26 @@ router.get("/alertas", (req, res) => {
     `).all(fechaHoy);
 
     res.json({ stockBajo, porCaducar, caducados, configuracion: config });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/dashboard/actividad-reciente
+router.get("/actividad-reciente", (req, res) => {
+  try {
+    if (!req.session.usuario || req.session.usuario.rol !== "admin") {
+      return res.json([]);
+    }
+
+    const actividad = db.prepare(`
+      SELECT id, usuario, accion, modulo, detalle, fecha
+      FROM auditoria
+      ORDER BY id DESC
+      LIMIT 10
+    `).all();
+
+    res.json(actividad);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css"/>
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_dashboard">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
@@ -19,13 +19,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link activo">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link activo" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -68,11 +69,11 @@
     <div class="card">
       <h2 class="card-titulo">Accesos rapidos</h2>
       <div class="d-accesos">
-        <a href="/"                    class="d-acceso-btn">Inventario</a>
-        <a href="/ordenes.html"        class="d-acceso-btn">Nueva Orden</a>
-        <a href="/reportes.html"       class="d-acceso-btn">Reportes</a>
-        <a href="/orden-especial.html" class="d-acceso-btn">Orden Especial</a>
-        <a href="/configuracion.html"  class="d-acceso-btn">Configuracion</a>
+        <a href="/"                    class="d-acceso-btn" data-permiso="ver_inventario">Inventario</a>
+        <a href="/ordenes.html"        class="d-acceso-btn" data-permiso-any="ver_ordenes,crear_ordenes">Nueva Orden</a>
+        <a href="/reportes.html"       class="d-acceso-btn" data-permiso="ver_reportes">Reportes</a>
+        <a href="/orden-especial.html" class="d-acceso-btn" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+        <a href="/configuracion.html"  class="d-acceso-btn" data-permiso="ver_configuracion">Configuracion</a>
       </div>
     </div>
 
@@ -92,6 +93,11 @@
     <div class="card">
       <h2 class="card-titulo">Alertas</h2>
       <div id="d-alertas"><p class="d-empty">Cargando...</p></div>
+    </div>
+
+    <div class="card" data-solo-admin>
+      <h2 class="card-titulo">Actividad reciente</h2>
+      <div id="d-actividad-reciente"><p class="d-empty">Cargando...</p></div>
     </div>
 
   </main>

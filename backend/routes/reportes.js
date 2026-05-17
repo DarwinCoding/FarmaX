@@ -16,6 +16,7 @@
 const express = require("express");
 const router  = express.Router();
 const db      = require("../database");
+const { requirePermiso } = require("../middleware/permisos");
 
 const DEFAULTS = {
   stock_minimo_global: 5,
@@ -36,6 +37,9 @@ function leerConfiguracionGeneral() {
 }
 
 // ── 1. Inventario general ──
+router.use("/excel", requirePermiso("exportar_reportes_excel"));
+router.use(requirePermiso("ver_reportes"));
+
 router.get("/inventario-general", (req, res) => {
   try {
     const config = leerConfiguracionGeneral();

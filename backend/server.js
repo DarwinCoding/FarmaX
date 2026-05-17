@@ -1,17 +1,18 @@
 // ============================================================
-// server.js - Servidor principal (v3: +Auth +Reportes)
+// server.js - Servidor principal FarmaX
 // ============================================================
-const express     = require("express");
-const path        = require("path");
-const session     = require("express-session");
+
+const express = require("express");
+const path = require("path");
+const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 
-const app  = express();
+const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-// ── Sesiones: guardan quién está logueado ──
+// Sesiones: guardan quien esta logueado.
 app.use(session({
   store: new SQLiteStore({
     db: "farmacia.db",
@@ -23,67 +24,42 @@ app.use(session({
   cookie: { maxAge: 8 * 60 * 60 * 1000, httpOnly: true }
 }));
 
-// ── Middleware: verifica que el usuario esté logueado ──
 function requireAuth(req, res, next) {
   if (!req.session.usuario) {
-    return res.status(401).json({ error: "No autenticado. Inicia sesión." });
+    return res.status(401).json({ error: "No autenticado. Inicia sesion." });
   }
   next();
 }
 
-// ── Middleware: verifica que el usuario tenga el rol correcto ──
-function requireRol(rol) {
-  return (req, res, next) => {
-    if (!req.session.usuario) return res.status(401).json({ error: "No autenticado" });
-    if (req.session.usuario.rol !== rol) return res.status(403).json({ error: "Acceso denegado. Rol requerido: " + rol });
-    next();
-  };
-}
-
-// ── Archivos estáticos del frontend ──
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// ── Rutas PÚBLICAS (sin login) ──
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
-// ── Rutas PROTEGIDAS (requieren sesión activa) ──
 const medicamentosRoutes = require("./routes/medicamentos");
 app.use("/api/medicamentos", requireAuth, medicamentosRoutes);
 
 const ordenesRoutes = require("./routes/ordenes");
 app.use("/api/ordenes", requireAuth, ordenesRoutes);
 
-// Solo admin puede gestionar usuarios
 const usuariosRoutes = require("./routes/usuarios");
-app.use("/api/usuarios", requireAuth, requireRol("admin"), usuariosRoutes);
+app.use("/api/usuarios", requireAuth, usuariosRoutes);
 
-// Reportes: cualquier usuario autenticado
 const reportesRoutes = require("./routes/reportes");
 app.use("/api/reportes", requireAuth, reportesRoutes);
 
-// Órdenes especiales:
-//   - GET y POST: cualquier usuario autenticado
-//   - DELETE: solo admin (verificado dentro de la ruta con middleware)
 const ordenesEspecialesRoutes = require("./routes/ordenesEspeciales");
+app.use("/api/ordenes-especiales", requireAuth, ordenesEspecialesRoutes);
 
-// Middleware que protege DELETE solo para admin, GET y POST para cualquier usuario autenticado
-app.use("/api/ordenes-especiales", requireAuth, (req, res, next) => {
-  // Si es DELETE, verificamos que sea admin
-  if (req.method === "DELETE") {
-    return requireRol("admin")(req, res, next);
-  }
-  // GET y POST pasan sin restricción de rol
-  next();
-}, ordenesEspecialesRoutes);
-// ── Dashboard ──
 const dashboardRoutes = require("./routes/dashboard");
 app.use("/api/dashboard", requireAuth, dashboardRoutes);
 
 const configuracionRoutes = require("./routes/configuracion");
 app.use("/api/configuracion", requireAuth, configuracionRoutes);
 
-// ── Ruta raíz ──
+const auditoriaRoutes = require("./routes/auditoria");
+app.use("/api/auditoria", requireAuth, auditoriaRoutes);
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
@@ -93,10 +69,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("╔══════════════════════════════════════════╗");
-  console.log("║  🏥 FARMACIA CLÍNICA - Sistema v4.0      ║");
-  console.log("║  +Excel  +Órdenes Especiales             ║");
-  console.log("╚══════════════════════════════════════════╝");
-  console.log(`\n✅ Servidor en: http://localhost:${PORT}`);
-  console.log("   Usuario: admin / Contraseña: admin123\n");
+  console.log(`Servidor FarmaX en http://localhost:${PORT}`);
+  console.log("Usuario inicial: admin / admin123");
 });

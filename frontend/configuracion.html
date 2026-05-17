@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css"/>
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_configuracion">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
@@ -19,13 +19,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link activo">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link activo" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">...</span>
@@ -58,7 +59,7 @@
         </div>
       </div>
       <div class="form-acciones">
-        <button class="btn btn-primario" id="btn-guardar-configuracion">Guardar configuracion</button>
+        <button class="btn btn-primario" id="btn-guardar-configuracion" data-permiso="editar_configuracion">Guardar configuracion</button>
       </div>
       <p id="configuracion-mensaje" class="campo-ayuda"></p>
     </div>
@@ -74,8 +75,8 @@
         </div>
       </div>
       <div class="form-acciones">
-        <button class="btn btn-primario" id="btn-guardar-area">Agregar area</button>
-        <button class="btn btn-secundario" id="btn-cancelar-area" style="display:none">Cancelar edicion</button>
+        <button class="btn btn-primario" id="btn-guardar-area" data-permiso="editar_configuracion">Agregar area</button>
+        <button class="btn btn-secundario" id="btn-cancelar-area" data-permiso="editar_configuracion" style="display:none">Cancelar edicion</button>
       </div>
       <p id="areas-mensaje" class="campo-ayuda"></p>
 
@@ -105,8 +106,8 @@
         </div>
       </div>
       <div class="form-acciones">
-        <button class="btn btn-primario" id="btn-guardar-presentacion">Agregar presentacion</button>
-        <button class="btn btn-secundario" id="btn-cancelar-presentacion" style="display:none">Cancelar edicion</button>
+        <button class="btn btn-primario" id="btn-guardar-presentacion" data-permiso="editar_configuracion">Agregar presentacion</button>
+        <button class="btn btn-secundario" id="btn-cancelar-presentacion" data-permiso="editar_configuracion" style="display:none">Cancelar edicion</button>
       </div>
       <p id="presentaciones-mensaje" class="campo-ayuda"></p>
 
@@ -133,7 +134,7 @@
         Descarga una copia manual de la base de datos SQLite actual. Solo administradores.
       </p>
       <div class="form-acciones">
-        <button class="btn btn-primario" id="btn-descargar-backup">Descargar respaldo</button>
+        <button class="btn btn-primario" id="btn-descargar-backup" data-permiso="descargar_backup">Descargar respaldo</button>
       </div>
       <p id="backup-mensaje" class="campo-ayuda"></p>
     </div>

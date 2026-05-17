@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css" />
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_inventario">
 
   <!-- HEADER UNIFICADO: logo FARMAX centrado, sin texto adicional -->
   <header>
@@ -21,13 +21,14 @@
   <!-- NAVBAR UNIFICADO: mismo en todas las páginas -->
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link activo">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link activo" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -41,7 +42,7 @@
     <div id="banner-alertas"></div>
 
     <!-- Formulario: solo visible para admin (data-solo-admin lo oculta a usuarios normales) -->
-    <section id="seccion-formulario" class="card" data-solo-admin>
+    <section id="seccion-formulario" class="card" data-permiso-any="crear_medicamento,editar_medicamento">
       <h2 class="card-titulo" id="form-titulo">Agregar Medicamento</h2>
       <form id="form-medicamento" class="formulario" novalidate>
         <div class="form-grupo">
@@ -67,7 +68,7 @@
           <input type="text" id="lote" placeholder="Ej: LOT-2024-001" required autocomplete="off" />
         </div>
         <div class="form-botones">
-          <button type="submit" id="btn-guardar" class="btn btn-primario">Guardar Medicamento</button>
+          <button type="submit" id="btn-guardar" class="btn btn-primario" data-permiso="crear_medicamento">Guardar Medicamento</button>
           <button type="button" id="btn-cancelar" class="btn btn-secundario" style="display:none">Cancelar</button>
         </div>
       </form>

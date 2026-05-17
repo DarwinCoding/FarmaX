@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css"/>
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_usuarios">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
@@ -19,13 +19,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link activo" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link activo" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -38,7 +39,7 @@
     <div class="card">
       <div class="card-cabecera">
         <h2 class="card-titulo">Usuarios del Sistema</h2>
-        <button class="btn btn-primario" onclick="abrirModalNuevoUsuario()">Nuevo usuario</button>
+        <button class="btn btn-primario" data-permiso="crear_usuarios" onclick="abrirModalNuevoUsuario()">Nuevo usuario</button>
       </div>
 
       <div class="tabla-contenedor">
@@ -64,7 +65,7 @@
 
   <!-- Modal: crear / editar usuario -->
   <div id="modal-usuario-overlay" class="modal-overlay">
-    <div class="modal" style="max-width:420px;width:90%">
+    <div class="modal modal-usuario">
       <h3 id="modal-usuario-titulo">Nuevo Usuario</h3>
 
       <div class="modal-form">
@@ -85,6 +86,13 @@
             <option value="usuario">Usuario — Solo ordenes y ver inventario</option>
             <option value="admin">Admin — Acceso completo</option>
           </select>
+        </div>
+        <div class="form-grupo">
+          <label>Permisos</label>
+          <div id="u-permisos-admin-aviso" class="permisos-admin-aviso">
+            El administrador tiene todos los permisos automaticamente.
+          </div>
+          <div id="u-permisos-lista" class="permisos-lista"></div>
         </div>
         <div id="u-error" class="form-error"></div>
       </div>

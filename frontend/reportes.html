@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css"/>
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_reportes">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
@@ -19,13 +19,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link activo">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link activo" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -76,7 +77,7 @@
       <!-- Panel: Inventario general -->
       <div class="reporte-panel activo" id="panel-inventario">
         <div class="panel-acciones">
-          <button class="btn btn-secundario" onclick="descargarExcel('inventario-general')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcel('inventario-general')">Descargar Excel</button>
         </div>
         <div id="tabla-inventario-general"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -84,7 +85,7 @@
       <!-- Panel: Stock bajo -->
       <div class="reporte-panel" id="panel-stock-bajo">
         <div class="panel-acciones">
-          <button class="btn btn-secundario" onclick="descargarExcel('stock-bajo')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcel('stock-bajo')">Descargar Excel</button>
         </div>
         <div id="tabla-stock-bajo"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -92,7 +93,7 @@
       <!-- Panel: Por caducar -->
       <div class="reporte-panel" id="panel-por-caducar">
         <div class="panel-acciones">
-          <button class="btn btn-secundario" onclick="descargarExcel('proximos-caducar')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcel('proximos-caducar')">Descargar Excel</button>
         </div>
         <div id="tabla-por-caducar"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -100,7 +101,7 @@
       <!-- Panel: Caducados -->
       <div class="reporte-panel" id="panel-caducados">
         <div class="panel-acciones">
-          <button class="btn btn-secundario" onclick="descargarExcel('caducados')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcel('caducados')">Descargar Excel</button>
         </div>
         <div id="tabla-caducados"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -118,7 +119,7 @@
           </div>
           <button class="btn btn-primario" onclick="cargarHistorial()">Filtrar</button>
           <button class="btn btn-secundario" onclick="limpiarFiltroHistorial()">Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('historial-ordenes','hist-fecha-inicio','hist-fecha-fin')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcelFiltrado('historial-ordenes','hist-fecha-inicio','hist-fecha-fin')">Descargar Excel</button>
         </div>
         <div id="tabla-historial"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -136,7 +137,7 @@
           </div>
           <button class="btn btn-primario" onclick="cargarConsumo()">Filtrar</button>
           <button class="btn btn-secundario" onclick="limpiarFiltroConsumo()">Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelFiltrado('consumo-por-area','con-fecha-inicio','con-fecha-fin')">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcelFiltrado('consumo-por-area','con-fecha-inicio','con-fecha-fin')">Descargar Excel</button>
         </div>
         <div id="tabla-consumo"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>
@@ -166,7 +167,7 @@
           </div>
           <button class="btn btn-primario" onclick="cargarOrdenesEspecialesReporte()">Filtrar</button>
           <button class="btn btn-secundario" onclick="limpiarFiltrosOE()">Limpiar</button>
-          <button class="btn btn-secundario" onclick="descargarExcelOE()">Descargar Excel</button>
+          <button class="btn btn-secundario" data-permiso="exportar_reportes_excel" onclick="descargarExcelOE()">Descargar Excel</button>
         </div>
         <div id="tabla-ordenes-especiales-reporte"><p style="color:var(--gris-texto)">Cargando...</p></div>
       </div>

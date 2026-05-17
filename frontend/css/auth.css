@@ -237,6 +237,73 @@
   margin: 1rem 0;
 }
 
+.modal-usuario {
+  max-width: 720px;
+  width: 92%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.permisos-admin-aviso {
+  display: none;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--gris-borde, #E3EEF6);
+  border-radius: 8px;
+  background: var(--azul-suave, #EAF8FF);
+  color: var(--azul-oscuro, #2F80ED);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.permisos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--gris-borde, #E3EEF6);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: var(--gris-claro, #F6FAFD);
+}
+
+.permisos-lista.permisos-deshabilitados {
+  opacity: 0.55;
+}
+
+.permisos-grupo {
+  border: 1px solid var(--gris-borde, #E3EEF6);
+  border-radius: 8px;
+  padding: 0.7rem;
+  background: var(--blanco, #fff);
+}
+
+.permisos-grupo legend {
+  padding: 0 0.35rem;
+  color: var(--azul-oscuro, #2F80ED);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.permiso-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+  color: var(--negro-suave, #1F2937);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.permiso-check input {
+  width: auto;
+  flex: 0 0 auto;
+}
+
 /* ══════════════════════════════════════
    RESPONSIVE MÓVIL — auth.css
    Pantallas ≤ 768px

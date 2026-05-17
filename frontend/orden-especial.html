@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/auth.css"/>
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_ordenes_especiales">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
@@ -19,13 +19,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link activo">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link activo" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -36,7 +37,7 @@
 
   <main>
     <!-- Formulario de registro -->
-    <div class="card">
+    <div class="card" data-permiso="crear_ordenes_especiales">
       <h2 class="card-titulo">Registrar Orden Especial</h2>
       <p class="card-descripcion">
         Registra entregas de medicamentos a medicos o personal. El stock se descuenta automaticamente.
@@ -93,7 +94,7 @@
       </div>
 
       <div class="form-acciones">
-        <button class="btn btn-primario" onclick="registrarOrden()">Registrar orden especial</button>
+        <button class="btn btn-primario" onclick="registrarOrden()" data-permiso="crear_ordenes_especiales">Registrar orden especial</button>
         <button class="btn btn-secundario" onclick="limpiarFormulario()">Limpiar</button>
       </div>
     </div>

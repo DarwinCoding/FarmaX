@@ -5,6 +5,66 @@
 const API = "/api/usuarios";
 let editandoUsuarioId = null;
 
+const PERMISOS_GRUPOS = [
+  {
+    titulo: "Inventario",
+    permisos: [
+      ["Ver inventario", "ver_inventario"],
+      ["Crear medicamento", "crear_medicamento"],
+      ["Editar medicamento", "editar_medicamento"],
+      ["Modificar stock", "modificar_stock"],
+      ["Desactivar medicamento", "desactivar_medicamento"]
+    ]
+  },
+  {
+    titulo: "Ordenes",
+    permisos: [
+      ["Ver ordenes", "ver_ordenes"],
+      ["Crear ordenes", "crear_ordenes"],
+      ["Despachar ordenes", "despachar_ordenes"],
+      ["Eliminar ordenes", "eliminar_ordenes"]
+    ]
+  },
+  {
+    titulo: "Ordenes Especiales",
+    permisos: [
+      ["Ver ordenes especiales", "ver_ordenes_especiales"],
+      ["Crear ordenes especiales", "crear_ordenes_especiales"],
+      ["Eliminar ordenes especiales", "eliminar_ordenes_especiales"]
+    ]
+  },
+  {
+    titulo: "Reportes",
+    permisos: [
+      ["Ver reportes", "ver_reportes"],
+      ["Exportar reportes Excel", "exportar_reportes_excel"]
+    ]
+  },
+  {
+    titulo: "Usuarios",
+    permisos: [
+      ["Ver usuarios", "ver_usuarios"],
+      ["Crear usuarios", "crear_usuarios"],
+      ["Editar usuarios", "editar_usuarios"],
+      ["Eliminar usuarios", "eliminar_usuarios"]
+    ]
+  },
+  {
+    titulo: "Configuracion",
+    permisos: [
+      ["Ver configuracion", "ver_configuracion"],
+      ["Editar configuracion", "editar_configuracion"],
+      ["Descargar backup", "descargar_backup"]
+    ]
+  },
+  {
+    titulo: "Dashboard",
+    permisos: [
+      ["Ver dashboard", "ver_dashboard"]
+    ]
+  }
+];
+
 // ── Utilidades ──
 function esc(t) {
   const d = document.createElement("div");
@@ -24,6 +84,54 @@ function toast(msg, tipo = "ok") {
 function fmtFecha(str) {
   if (!str) return "-";
   return new Date(str).toLocaleDateString("es-EC", {day:"2-digit",month:"short",year:"numeric"});
+}
+
+function puedeAccionUsuario(permiso) {
+  return !window.tienePermiso || window.tienePermiso(permiso);
+}
+
+function renderPermisosUsuario() {
+  const contenedor = document.getElementById("u-permisos-lista");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = PERMISOS_GRUPOS.map(grupo => `
+    <fieldset class="permisos-grupo">
+      <legend>${esc(grupo.titulo)}</legend>
+      ${grupo.permisos.map(([label, valor]) => `
+        <label class="permiso-check">
+          <input type="checkbox" value="${valor}" data-permiso/>
+          <span>${esc(label)}</span>
+        </label>
+      `).join("")}
+    </fieldset>
+  `).join("");
+}
+
+function obtenerPermisosSeleccionados() {
+  return [...document.querySelectorAll("[data-permiso]:checked")]
+    .map(input => input.value);
+}
+
+function marcarPermisos(permisos = []) {
+  const seleccionados = new Set(permisos);
+  document.querySelectorAll("[data-permiso]").forEach(input => {
+    input.checked = seleccionados.has(input.value);
+  });
+}
+
+function actualizarEstadoPermisos() {
+  const rol = document.getElementById("u-rol").value;
+  const esAdmin = rol === "admin";
+  const aviso = document.getElementById("u-permisos-admin-aviso");
+  const lista = document.getElementById("u-permisos-lista");
+
+  if (aviso) aviso.style.display = esAdmin ? "block" : "none";
+  if (lista) lista.classList.toggle("permisos-deshabilitados", esAdmin);
+
+  document.querySelectorAll("[data-permiso]").forEach(input => {
+    input.disabled = esAdmin;
+    if (esAdmin) input.checked = false;
+  });
 }
 
 // ── Cargar y renderizar usuarios ──
@@ -46,6 +154,8 @@ async function cargarUsuarios() {
         : `<span class="badge badge-usuario" style="padding:.2rem .6rem;border-radius:20px;font-size:.75rem">👤 Usuario</span>`;
 
       const esMiUsuario = window.usuarioActual && window.usuarioActual.id === u.id;
+      const puedeEditar = !window.tienePermiso || window.tienePermiso("editar_usuarios");
+      const puedeEliminar = !window.tienePermiso || window.tienePermiso("eliminar_usuarios");
 
       return `
         <tr>
@@ -67,6 +177,13 @@ async function cargarUsuarios() {
           </td>
         </tr>`;
     }).join("");
+    if (!puedeAccionUsuario("editar_usuarios")) {
+      tbody.querySelectorAll("button[onclick^='abrirEdicionUsuario']").forEach(btn => btn.remove());
+    }
+    if (!puedeAccionUsuario("eliminar_usuarios")) {
+      tbody.querySelectorAll("button[onclick^='eliminarUsuario']").forEach(btn => btn.remove());
+    }
+    if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--rojo)">❌ ${err.message}</td></tr>`;
   }
@@ -82,6 +199,8 @@ function abrirModalNuevoUsuario() {
   document.getElementById("u-error").style.display = "none";
   document.getElementById("u-username").removeAttribute("disabled");
   document.getElementById("u-password-hint").style.display = "none";
+  marcarPermisos([]);
+  actualizarEstadoPermisos();
   mostrarModal();
 }
 
@@ -89,8 +208,10 @@ function abrirModalNuevoUsuario() {
 async function abrirEdicionUsuario(id) {
   editandoUsuarioId = id;
   try {
-    const lista = await fetch(API).then(r => r.json());
-    const u = lista.find(x => x.id === id);
+    const u = await fetch(`${API}/${id}`).then(async r => {
+      if (!r.ok) { const e = await r.json(); throw new Error(e.error); }
+      return r.json();
+    });
     if (!u) return;
     document.getElementById("modal-usuario-titulo").textContent = `Editar Usuario: ${u.username}`;
     document.getElementById("u-username").value  = u.username;
@@ -99,6 +220,8 @@ async function abrirEdicionUsuario(id) {
     document.getElementById("u-rol").value       = u.rol;
     document.getElementById("u-error").style.display = "none";
     document.getElementById("u-password-hint").style.display = "inline";
+    marcarPermisos(u.permisos || []);
+    actualizarEstadoPermisos();
     mostrarModal();
   } catch (err) { toast("❌ " + err.message, "error"); }
 }
@@ -120,6 +243,7 @@ async function guardarUsuario() {
   const username = document.getElementById("u-username").value.trim();
   const password = document.getElementById("u-password").value;
   const rol      = document.getElementById("u-rol").value;
+  const permisos = rol === "admin" ? [] : obtenerPermisosSeleccionados();
 
   try {
     if (editandoUsuarioId === null) {
@@ -132,7 +256,7 @@ async function guardarUsuario() {
       await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, rol })
+        body: JSON.stringify({ username, password, rol, permisos })
       }).then(async r => {
         if (!r.ok) { const e = await r.json(); throw new Error(e.error); }
         return r.json();
@@ -140,7 +264,7 @@ async function guardarUsuario() {
       toast("✅ Usuario creado");
     } else {
       // EDITAR (solo rol y opcionalmente contraseña)
-      const body = { rol };
+      const body = { rol, permisos };
       if (password) body.password = password;
       await fetch(`${API}/${editandoUsuarioId}`, {
         method: "PUT",
@@ -180,4 +304,9 @@ document.getElementById("modal-usuario-overlay").addEventListener("click", (e) =
 });
 
 // ── Init ──
-document.addEventListener("DOMContentLoaded", cargarUsuarios);
+document.addEventListener("DOMContentLoaded", () => {
+  renderPermisosUsuario();
+  document.getElementById("u-rol").addEventListener("change", actualizarEstadoPermisos);
+  actualizarEstadoPermisos();
+  cargarUsuarios();
+});

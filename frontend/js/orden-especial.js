@@ -196,7 +196,7 @@ async function cargarHistorial() {
 
   try {
     const data = await fetch(API_OE).then(r => r.json());
-    const esAdmin = obtenerRolActual() === "admin";
+    const puedeEliminar = !window.tienePermiso || window.tienePermiso("eliminar_ordenes_especiales");
 
     if (data.length === 0) {
       cont.innerHTML = `<p style="color:var(--gris-texto);padding:1.5rem;text-align:center">Sin órdenes especiales registradas.</p>`;
@@ -215,7 +215,7 @@ async function cargarHistorial() {
             <th style="padding:.7rem 1rem;text-align:left">Medicamento</th>
             <th style="padding:.7rem 1rem;text-align:center">Cantidad</th>
             <th style="padding:.7rem 1rem;text-align:left">Observación</th>
-            ${esAdmin ? '<th style="padding:.7rem 1rem;text-align:center">Acción</th>' : ""}
+            ${puedeEliminar ? '<th style="padding:.7rem 1rem;text-align:center">Acción</th>' : ""}
           </tr>
         </thead>
         <tbody>
@@ -237,9 +237,10 @@ async function cargarHistorial() {
               </td>
               <td style="padding:.65rem 1rem;text-align:center;font-weight:700;color:var(--verde-oscuro)">${o.cantidad}</td>
               <td style="padding:.65rem 1rem;color:var(--gris-texto);font-size:.83rem">${esc(o.observacion) || "-"}</td>
-              ${esAdmin ? `
+              ${puedeEliminar ? `
                 <td style="padding:.65rem 1rem;text-align:center">
                   <button
+                    data-permiso="eliminar_ordenes_especiales"
                     onclick="eliminarOrden(${o.id})"
                     style="background:var(--rojo);color:white;border:none;border-radius:6px;padding:.3rem .7rem;cursor:pointer;font-size:.8rem"
                   >🗑 Eliminar</button>
@@ -251,6 +252,7 @@ async function cargarHistorial() {
       </table></div>
       <p style="margin-top:.8rem;font-size:.8rem;color:var(--gris-texto)">${data.length} órdenes en total</p>
     `;
+    if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
   } catch (e) {
     cont.innerHTML = `<p style="color:var(--rojo)">❌ Error: ${e.message}</p>`;
   }

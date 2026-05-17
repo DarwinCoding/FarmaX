@@ -103,6 +103,30 @@ db.exec(`
   )
 `);
 
+// Permisos individuales por usuario normal.
+// Los administradores obtienen todos los permisos por rol, aun sin registros aqui.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS usuarios_permisos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    permiso TEXT NOT NULL,
+    activo INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS auditoria (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER,
+    usuario TEXT NOT NULL,
+    accion TEXT NOT NULL,
+    modulo TEXT NOT NULL,
+    detalle TEXT,
+    fecha TEXT DEFAULT (datetime('now'))
+  )
+`);
+
 // Tabla simple de configuracion por clave/valor.
 // INSERT OR IGNORE conserva valores existentes y solo completa defaults faltantes.
 db.exec(`

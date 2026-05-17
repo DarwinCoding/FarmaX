@@ -134,11 +134,12 @@ async function cargarAreas() {
       <tr>
         <td><strong>${esc(area.nombre)}</strong></td>
         <td class="acciones">
-          <button class="btn btn-editar" onclick="editarArea(${area.id})">Editar</button>
-          <button class="btn btn-archivar" onclick="desactivarArea(${area.id})">Desactivar</button>
+          <button class="btn btn-editar" data-permiso="editar_configuracion" onclick="editarArea(${area.id})">Editar</button>
+          <button class="btn btn-archivar" data-permiso="editar_configuracion" onclick="desactivarArea(${area.id})">Desactivar</button>
         </td>
       </tr>
     `).join("");
+    if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="2" class="sin-datos">${esc(err.message)}</td></tr>`;
   }
@@ -236,11 +237,12 @@ async function cargarPresentaciones() {
       <tr>
         <td><strong>${esc(presentacion.nombre)}</strong></td>
         <td class="acciones">
-          <button class="btn btn-editar" onclick="editarPresentacion(${presentacion.id})">Editar</button>
-          <button class="btn btn-archivar" onclick="desactivarPresentacion(${presentacion.id})">Desactivar</button>
+          <button class="btn btn-editar" data-permiso="editar_configuracion" onclick="editarPresentacion(${presentacion.id})">Editar</button>
+          <button class="btn btn-archivar" data-permiso="editar_configuracion" onclick="desactivarPresentacion(${presentacion.id})">Desactivar</button>
         </td>
       </tr>
     `).join("");
+    if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="2" class="sin-datos">${esc(err.message)}</td></tr>`;
   }

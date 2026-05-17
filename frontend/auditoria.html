@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auditoria - FarmaX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/auth.css"/>
+  <script src="/js/auth-guard.js"></script>
+</head>
+<body>
+
+  <header>
+    <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo"/>
+  </header>
+
+  <nav class="nav-principal">
+    <div class="nav-enlaces">
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link activo" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
+    </div>
+    <div class="nav-usuario">
+      <span id="nav-username">...</span>
+      <span class="nav-badge-rol" id="nav-rol"></span>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="card">
+      <div class="card-cabecera">
+        <h2 class="card-titulo">Auditoria</h2>
+        <button class="btn btn-secundario" id="btn-auditoria-limpiar">Limpiar filtros</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label for="auditoria-usuario">Usuario</label>
+          <input type="search" id="auditoria-usuario" placeholder="Buscar usuario" autocomplete="off"/>
+        </div>
+        <div class="form-grupo">
+          <label for="auditoria-modulo">Modulo</label>
+          <select id="auditoria-modulo">
+            <option value="">Todos</option>
+            <option value="Login">Login</option>
+            <option value="Inventario">Inventario</option>
+            <option value="Ordenes">Ordenes</option>
+            <option value="Ordenes Especiales">Ordenes Especiales</option>
+            <option value="Usuarios">Usuarios</option>
+            <option value="Configuracion">Configuracion</option>
+          </select>
+        </div>
+        <div class="form-grupo">
+          <label for="auditoria-fecha">Fecha</label>
+          <input type="date" id="auditoria-fecha"/>
+        </div>
+      </div>
+
+      <div class="form-acciones">
+        <button class="btn btn-primario" id="btn-auditoria-filtrar">Filtrar</button>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Usuario</th>
+              <th>Accion</th>
+              <th>Modulo</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody id="auditoria-body">
+            <tr><td colspan="5" class="sin-datos">Cargando auditoria...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>FarmaX v4.0 - Auditoria</footer>
+  <div id="toast-contenedor"></div>
+  <script src="/js/auditoria.js"></script>
+</body>
+</html>

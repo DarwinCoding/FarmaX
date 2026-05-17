@@ -14,6 +14,8 @@
 const express = require("express");
 const router  = express.Router();
 const db      = require("../database"); // Misma BD que usa medicamentos.js
+const { requirePermiso } = require("../middleware/permisos");
+const { registrarAuditoria } = require("../auditoria");
 
 function obtenerAreasValidas() {
   const areas = db.prepare(`
@@ -30,7 +32,7 @@ function obtenerAreasValidas() {
 // POST /api/ordenes
 // Crea una nueva orden vacía (sin detalle todavía)
 // ──────────────────────────────────────────────
-router.post("/", (req, res) => {
+router.post("/", requirePermiso("crear_ordenes"), (req, res) => {
   try {
     const { area } = req.body;
 
@@ -47,6 +49,7 @@ router.post("/", (req, res) => {
 
     const stmt   = db.prepare("INSERT INTO ordenes (area) VALUES (?)");
     const result = stmt.run(area);
+    registrarAuditoria(req, "CREAR", "Ordenes", `Creo orden #${result.lastInsertRowid} para ${area}`);
 
     res.status(201).json({
       message: "Orden creada",
@@ -61,7 +64,7 @@ router.post("/", (req, res) => {
 // GET /api/ordenes
 // Lista todas las órdenes (más recientes primero)
 // ──────────────────────────────────────────────
-router.get("/", (req, res) => {
+router.get("/", requirePermiso("ver_ordenes"), (req, res) => {
   try {
     // Traemos las órdenes junto con cuántos ítems tiene cada una
     const ordenes = db.prepare(`
@@ -84,7 +87,7 @@ router.get("/", (req, res) => {
 // GET /api/ordenes/:id
 // Devuelve UNA orden con todo su detalle de medicamentos
 // ──────────────────────────────────────────────
-router.get("/:id", (req, res) => {
+router.get("/:id", requirePermiso("ver_ordenes"), (req, res) => {
   try {
     const { id } = req.params;
 
@@ -123,7 +126,7 @@ router.get("/:id", (req, res) => {
 // POST /api/ordenes/:id/detalle
 // Agrega un medicamento a la orden (una línea del carrito)
 // ──────────────────────────────────────────────
-router.post("/:id/detalle", (req, res) => {
+router.post("/:id/detalle", requirePermiso("crear_ordenes"), (req, res) => {
   try {
     const orden_id = req.params.id;
     const { medicamento_id, cantidad_solicitada } = req.body;
@@ -180,7 +183,7 @@ router.post("/:id/detalle", (req, res) => {
 // PUT /api/detalle/:id
 // Actualiza la cantidad entregada de una línea del carrito
 // ──────────────────────────────────────────────
-router.put("/detalle/:id", (req, res) => {
+router.put("/detalle/:id", requirePermiso("crear_ordenes"), (req, res) => {
   try {
     const { id } = req.params;
     const { cantidad_entregada } = req.body;
@@ -223,7 +226,7 @@ router.put("/detalle/:id", (req, res) => {
 // DELETE /api/ordenes/detalle/:id
 // Elimina una línea del carrito
 // ──────────────────────────────────────────────
-router.delete("/detalle/:id", (req, res) => {
+router.delete("/detalle/:id", requirePermiso("crear_ordenes"), (req, res) => {
   try {
     const { id } = req.params;
 
@@ -258,7 +261,7 @@ router.delete("/detalle/:id", (req, res) => {
 //   medio, NADA se guarde (todo o nada). Así no quedan
 //   stocks descubiertos por error.
 // ──────────────────────────────────────────────
-router.post("/:id/despachar", (req, res) => {
+router.post("/:id/despachar", requirePermiso("despachar_ordenes"), (req, res) => {
   try {
     const { id } = req.params;
 
@@ -319,6 +322,7 @@ router.post("/:id/despachar", (req, res) => {
 
     // Ejecutamos la transacción
     despachar();
+    registrarAuditoria(req, "DESPACHAR", "Ordenes", `Despacho orden #${id}`);
 
     res.json({ message: "Orden despachada correctamente. Stock actualizado." });
 
@@ -337,18 +341,12 @@ router.post("/:id/despachar", (req, res) => {
 //   - Se eliminan en cascada las líneas de detalle_orden
 //   - NO se toca el stock (las órdenes eliminables aún no descontaron)
 // ──────────────────────────────────────────────
-router.delete("/:id", (req, res) => {
+router.delete("/:id", requirePermiso("eliminar_ordenes"), (req, res) => {
   try {
     const { id } = req.params;
 
     // ── Control de rol: solo admin puede eliminar órdenes ──
     // req.session.usuario lo pone el middleware requireAuth de server.js
-    if (!req.session.usuario || req.session.usuario.rol !== "admin") {
-      return res.status(403).json({
-        error: "Solo los administradores pueden eliminar órdenes."
-      });
-    }
-
     // Verificamos que la orden exista
     const orden = db.prepare("SELECT * FROM ordenes WHERE id = ?").get(id);
     if (!orden) {
@@ -371,6 +369,7 @@ router.delete("/:id", (req, res) => {
     });
 
     eliminar();
+    registrarAuditoria(req, "ELIMINAR", "Ordenes", `Elimino orden #${id}`);
 
     res.json({ message: `Orden #${id} eliminada correctamente.` });
 

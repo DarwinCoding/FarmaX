@@ -290,16 +290,16 @@ function renderizarTabla(lista) {
     if (med.activo === 0) {
       // Medicamento archivado: solo mostrar Restaurar
       botonesAccion = `
-        <button class="btn btn-restaurar" onclick="confirmarRestaurar(${med.id}, '${escaparHTML(med.nombre)}')">
+        <button class="btn btn-restaurar" data-permiso="desactivar_medicamento" onclick="confirmarRestaurar(${med.id}, '${escaparHTML(med.nombre)}')">
           ♻ Restaurar
         </button>`;
     } else {
       // Medicamento activo: Editar + Archivar
       botonesAccion = `
-        <button class="btn btn-editar" onclick="abrirEdicion(${med.id})">
+        <button class="btn btn-editar" data-permiso="editar_medicamento" onclick="abrirEdicion(${med.id})">
           ✏ Editar
         </button>
-        <button class="btn btn-archivar" onclick="confirmarEliminar(${med.id}, '${escaparHTML(med.nombre)}')">
+        <button class="btn btn-archivar" data-permiso="desactivar_medicamento" onclick="confirmarEliminar(${med.id}, '${escaparHTML(med.nombre)}')">
           📦 Archivar
         </button>`;
     }
@@ -319,6 +319,8 @@ function renderizarTabla(lista) {
         </td>
       </tr>`;
   }).join("");
+
+  if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
 }
 
 // ──────────────────────────────────────────────
@@ -451,7 +453,9 @@ function abrirEdicion(id) {
   // Cambiamos el título y botón del formulario
   document.getElementById("form-titulo").textContent = "✏ Editar Medicamento";
   document.getElementById("btn-guardar").textContent = "💾 Guardar Cambios";
+  document.getElementById("btn-guardar").dataset.permiso = "editar_medicamento";
   document.getElementById("btn-cancelar").style.display = "inline-flex";
+  if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
 
   // Hacemos scroll hacia el formulario para que el usuario lo vea
   document.getElementById("seccion-formulario").scrollIntoView({ behavior: "smooth" });
@@ -466,7 +470,9 @@ function cancelarEdicion() {
   pintarSelectPresentaciones();
   document.getElementById("form-titulo").textContent   = "➕ Agregar Medicamento";
   document.getElementById("btn-guardar").textContent   = "💊 Guardar Medicamento";
+  document.getElementById("btn-guardar").dataset.permiso = "crear_medicamento";
   document.getElementById("btn-cancelar").style.display = "none";
+  if (window.aplicarPermisosVisuales) window.aplicarPermisosVisuales();
 }
 
 /**

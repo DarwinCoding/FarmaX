@@ -120,9 +120,40 @@ async function cargarAlertas() {
   }
 }
 
+async function cargarActividadReciente() {
+  const cont = document.getElementById("d-actividad-reciente");
+  if (!cont) return;
+
+  try {
+    const data = await fetch(`${API}/actividad-reciente`).then(r => r.json());
+    if (!data.length) {
+      cont.innerHTML = "<p class='d-empty'>Sin actividad registrada</p>";
+      return;
+    }
+
+    cont.innerHTML = `
+      <table class="d-tabla">
+        <thead><tr><th>Fecha</th><th>Usuario</th><th>Accion</th><th>Modulo</th><th>Detalle</th></tr></thead>
+        <tbody>
+          ${data.map(a => `
+            <tr>
+              <td>${esc(a.fecha)}</td>
+              <td>${esc(a.usuario)}</td>
+              <td>${esc(a.accion)}</td>
+              <td>${esc(a.modulo)}</td>
+              <td>${esc(a.detalle)}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    cont.innerHTML = "<p class='d-empty'>Error al cargar actividad</p>";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   cargarResumen();
   cargarUltimasOrdenes();
   cargarEspecialesRecientes();
   cargarAlertas();
+  cargarActividadReciente();
 });

@@ -10,10 +10,12 @@
 const express = require("express");
 const router  = express.Router();
 const db      = require("../database");
+const { requirePermiso } = require("../middleware/permisos");
+const { registrarAuditoria } = require("../auditoria");
 
 // ── GET /api/ordenes-especiales ──────────────────────────────
 // Devuelve todas las órdenes especiales con el nombre del medicamento
-router.get("/", (req, res) => {
+router.get("/", requirePermiso("ver_ordenes_especiales"), (req, res) => {
   try {
     const ordenes = db.prepare(`
       SELECT
@@ -39,7 +41,7 @@ router.get("/", (req, res) => {
 
 // ── POST /api/ordenes-especiales ────────────────────────────
 // Crea una orden especial y descuenta del stock
-router.post("/", (req, res) => {
+router.post("/", requirePermiso("crear_ordenes_especiales"), (req, res) => {
   // Extraemos los campos del cuerpo de la petición
   const { nombre_persona, tipo_persona, medicamento_id, cantidad, fecha, observacion } = req.body;
 
@@ -98,6 +100,7 @@ router.post("/", (req, res) => {
     });
 
     const nuevoId = transaccion();
+    registrarAuditoria(req, "CREAR", "Ordenes Especiales", `Creo orden especial #${nuevoId} para ${nombre_persona.trim()}`);
 
     // Devolvemos la orden recién creada
     const nueva = db.prepare(`
@@ -115,7 +118,7 @@ router.post("/", (req, res) => {
 
 // ── DELETE /api/ordenes-especiales/:id ──────────────────────
 // Elimina una orden especial (solo admin, verificado en server.js)
-router.delete("/:id", (req, res) => {
+router.delete("/:id", requirePermiso("eliminar_ordenes_especiales"), (req, res) => {
   const { id } = req.params;
 
   try {
@@ -131,6 +134,7 @@ router.delete("/:id", (req, res) => {
     //   .run(orden.cantidad, orden.medicamento_id);
 
     db.prepare("DELETE FROM ordenes_especiales WHERE id = ?").run(id);
+    registrarAuditoria(req, "ELIMINAR", "Ordenes Especiales", `Elimino orden especial #${id}`);
     res.json({ mensaje: "Orden especial eliminada correctamente.", id: Number(id) });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="/css/auth.css" />
   <script src="/js/auth-guard.js"></script>
 </head>
-<body>
+<body data-permiso-pagina="ver_ordenes">
 
   <header>
     <img src="/img/LOGO FARMAX.png" alt="FarmaX" class="header-logo" />
@@ -20,13 +20,14 @@
 
   <nav class="nav-principal">
     <div class="nav-enlaces">
-      <a href="/dashboard.html"      class="nav-link">Dashboard</a>
-      <a href="/"                    class="nav-link">Inventario</a>
-      <a href="/ordenes.html"        class="nav-link activo">Ordenes</a>
-      <a href="/reportes.html"       class="nav-link">Reportes</a>
-      <a href="/orden-especial.html" class="nav-link">Orden Especial</a>
-      <a href="/configuracion.html"  class="nav-link">Configuracion</a>
-      <a href="/usuarios.html"       class="nav-link" data-solo-admin>Usuarios</a>
+      <a href="/dashboard.html"      class="nav-link" data-permiso="ver_dashboard">Dashboard</a>
+      <a href="/"                    class="nav-link" data-permiso="ver_inventario">Inventario</a>
+      <a href="/ordenes.html"        class="nav-link activo" data-permiso="ver_ordenes">Ordenes</a>
+      <a href="/reportes.html"       class="nav-link" data-permiso="ver_reportes">Reportes</a>
+      <a href="/orden-especial.html" class="nav-link" data-permiso="ver_ordenes_especiales">Orden Especial</a>
+      <a href="/configuracion.html"  class="nav-link" data-permiso="ver_configuracion">Configuracion</a>
+      <a href="/auditoria.html"      class="nav-link" data-solo-admin>Auditoria</a>
+      <a href="/usuarios.html"       class="nav-link" data-permiso="ver_usuarios">Usuarios</a>
     </div>
     <div class="nav-usuario">
       <span id="nav-username">…</span>
@@ -48,7 +49,7 @@
            PANEL 1: LISTA DE ORDENES (sin cambios)
       ═══════════════════════════════════════ -->
       <div class="tab-panel activo" id="tab-lista-panel">
-        <div class="form-nueva-orden" style="margin-bottom:1.5rem">
+        <div class="form-nueva-orden" style="margin-bottom:1.5rem" data-permiso="crear_ordenes">
           <div class="form-grupo">
             <label for="select-area">Area de destino</label>
             <select id="select-area">
@@ -77,7 +78,7 @@
               <p id="orden-activa-fecha"></p>
             </div>
           </div>
-          <div id="form-agregar-med">
+          <div id="form-agregar-med" data-permiso="crear_ordenes">
             <div class="agregar-medicamento-fila">
               <div class="form-grupo">
                 <label for="buscador-medicamento">Buscar medicamento</label>
@@ -90,7 +91,7 @@
                 <label for="cantidad-solicitar">Cantidad</label>
                 <input type="number" id="cantidad-solicitar" value="1" min="1" placeholder="1" />
               </div>
-              <button id="btn-agregar-med" class="btn btn-primario">Agregar</button>
+          <button id="btn-agregar-med" class="btn btn-primario" data-permiso="crear_ordenes">Agregar</button>
             </div>
           </div>
           <div class="tabla-contenedor">
@@ -112,7 +113,7 @@
               Total solicitado: <strong id="total-solicitado">0</strong> unidades<br>
               Total a entregar: <strong id="total-entregado">0</strong> unidades
             </div>
-            <button id="btn-despachar" class="btn-despachar">Despachar Orden</button>
+            <button id="btn-despachar" class="btn-despachar" data-permiso="despachar_ordenes">Despachar Orden</button>
           </div>
         </div>
       </div>
